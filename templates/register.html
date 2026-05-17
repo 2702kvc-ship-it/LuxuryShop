@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Đăng ký — LuxuryShop{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 500px;">
+  <h3 class="fw-bold mb-4 text-center">Tạo tài khoản</h3>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for cat, msg in messages %}
+      <div class="alert alert-{{ cat }} py-2">{{ msg }}</div>
+    {% endfor %}
+  {% endwith %}
+
+  <form method="POST">
+    <div class="mb-3">
+      <label class="form-label">Họ tên <span class="text-danger">*</span></label>
+      <input type="text" name="ho_ten" class="form-control"
+             value="{{ ho_ten or '' }}" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Email <span class="text-danger">*</span></label>
+      <input type="email" name="email" class="form-control"
+             value="{{ email or '' }}" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Số điện thoại</label>
+      <input type="tel" name="so_dien_thoai" class="form-control"
+             value="{{ sdt or '' }}" placeholder="Không bắt buộc">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Mật khẩu <span class="text-danger">*</span></label>
+      <input type="password" name="mat_khau" class="form-control"
+             minlength="6" required>
+      <div class="form-text">Ít nhất 6 ký tự.</div>
+    </div>
+    <div class="mb-4">
+      <label class="form-label">Xác nhận mật khẩu <span class="text-danger">*</span></label>
+      <input type="password" name="xac_nhan_mat_khau" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-dark w-100">Đăng ký</button>
+  </form>
+
+  <hr class="my-4">
+  <p class="text-center text-muted small">
+    Đã có tài khoản?
+    <a href="{{ url_for('auth.login') }}" class="text-dark fw-semibold">Đăng nhập</a>
+  </p>
+</div>
+{% endblock %}

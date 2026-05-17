@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Đăng nhập — LuxuryShop{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 460px;">
+  <h3 class="fw-bold mb-4 text-center">Đăng nhập</h3>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for cat, msg in messages %}
+      <div class="alert alert-{{ cat }} py-2">{{ msg }}</div>
+    {% endfor %}
+  {% endwith %}
+
+  <form method="POST">
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input type="email" name="email" class="form-control"
+             value="{{ email or '' }}" required autofocus>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Mật khẩu</label>
+      <input type="password" name="mat_khau" class="form-control" required>
+    </div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="form-check mb-0">
+        <input type="checkbox" name="nho_toi" id="nho_toi" class="form-check-input">
+        <label for="nho_toi" class="form-check-label">Nhớ tôi</label>
+      </div>
+      <a href="{{ url_for('auth.forgot_password') }}" class="text-muted small">Quên mật khẩu?</a>
+    </div>
+    <button type="submit" class="btn btn-dark w-100">Đăng nhập</button>
+  </form>
+
+  <hr class="my-4">
+  <p class="text-center text-muted small">
+    Chưa có tài khoản?
+    <a href="{{ url_for('auth.register') }}" class="text-dark fw-semibold">Đăng ký ngay</a>
+  </p>
+  <p class="text-center text-muted small">
+    Chưa nhận được email xác nhận?
+    <a href="{{ url_for('auth.resend_confirm') }}">Gửi lại</a>
+  </p>
+</div>
+{% endblock %}

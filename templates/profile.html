@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Tài khoản của tôi — LuxuryShop{% endblock %}
+{% block content %}
+<div class="container py-5" style="max-width: 680px;">
+  <div class="card shadow-sm border-0">
+    <div class="card-body p-4">
+      <h3 class="fw-bold mb-3">Thông tin tài khoản</h3>
+      <p class="mb-2"><strong>Họ tên:</strong> {{ kh.HoTen }}</p>
+      <p class="mb-2"><strong>Email:</strong> {{ kh.Email }}</p>
+      <p class="mb-2"><strong>SĐT:</strong> {{ kh.SoDienThoai or 'Chưa cập nhật' }}</p>
+      <p class="mb-4"><strong>Hạng thành viên:</strong> {{ kh.HangThanhVien }}</p>
+
+      <div class="d-flex gap-2">
+        <a href="{{ url_for('auth.change_password') }}" class="btn btn-dark">Đổi mật khẩu</a>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-secondary">Đăng xuất</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

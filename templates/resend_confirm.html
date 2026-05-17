@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Gửi lại xác nhận — LuxuryShop{% endblock %}
+{% block content %}
+<div class="container py-5" style="max-width: 440px;">
+  <h3 class="fw-bold mb-3 text-center">Gửi lại email xác nhận</h3>
+  <p class="text-muted text-center small mb-4">Nhập email đã đăng ký để nhận lại link xác nhận.</p>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for cat, msg in messages %}
+      <div class="alert alert-{{ cat }} py-2">{{ msg }}</div>
+    {% endfor %}
+  {% endwith %}
+
+  <form method="POST">
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input type="email" name="email" class="form-control" required autofocus>
+    </div>
+    <button type="submit" class="btn btn-dark w-100">Gửi lại</button>
+  </form>
+
+  <p class="text-center mt-3">
+    <a href="{{ url_for('auth.login') }}" class="text-muted small">← Quay lại đăng nhập</a>
+  </p>
+</div>
+{% endblock %}

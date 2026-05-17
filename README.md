@@ -40,3 +40,8 @@ Replace `user@example.com` with the email address used during registration.
 Notes:
 - Do NOT commit your `.env` file. It is included in `.gitignore`.
 - For sending email via Gmail, create an App Password and set it in `.env`.
+
+Team workflow:
+- Create a feature branch before editing code: `git checkout -b feature/your-name`
+- Pull the latest `main` regularly: `git pull origin main`
+- Push your branch and open a Pull Request when your changes are ready.

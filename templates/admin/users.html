@@ -1,0 +1,72 @@
+{% extends 'admin/base.html' %}
+{% block title %}Người dùng — LuxuryShop{% endblock %}
+
+{% block content %}
+<h1 class="fw-bold mb-4">Người dùng</h1>
+
+<div class="card card-soft mb-4">
+  <div class="card-body p-4">
+    <h5 class="fw-semibold mb-3">Nhân viên</h5>
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Họ tên</th>
+            <th>Email</th>
+            <th>Vai trò</th>
+            <th>Trạng thái</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in staff_list %}
+          <tr>
+            <td>{{ item.HoTen }}</td>
+            <td>{{ item.Email }}</td>
+            <td>{{ item.VaiTro }}</td>
+            <td>{{ 'Hoạt động' if item.TrangThai else 'Bị khóa' }}</td>
+            <td class="text-end">
+              <form method="POST" action="{{ url_for('admin.toggle_staff', nid=item.NhanVienID) }}" style="display:inline-block">
+                <button class="btn btn-sm btn-outline-secondary">{{ 'Khóa' if item.TrangThai else 'Mở' }}</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" class="text-muted">Chưa có nhân viên.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="card card-soft">
+  <div class="card-body p-4">
+    <h5 class="fw-semibold mb-3">Khách hàng</h5>
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Họ tên</th>
+            <th>Email</th>
+            <th>Hạng</th>
+            <th>SĐT</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in customer_list %}
+          <tr>
+            <td>{{ item.HoTen }}</td>
+            <td>{{ item.Email }}</td>
+            <td>{{ item.HangThanhVien }}</td>
+            <td>{{ item.SoDienThoai or '-' }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" class="text-muted">Chưa có khách hàng.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

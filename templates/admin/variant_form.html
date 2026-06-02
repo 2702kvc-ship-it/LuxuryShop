@@ -1,0 +1,53 @@
+{% extends 'admin/base.html' %}
+{% block title %}{{ 'Sửa' if variant else 'Thêm' }} biến thể — LuxuryShop{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+  <p class="text-muted mb-1">Sản phẩm</p>
+  <h1 class="fw-bold mb-0">{{ product.TenSanPham }}</h1>
+</div>
+
+<form method="POST" enctype="multipart/form-data">
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Serial number</label>
+      <input name="serial" class="form-control" value="{{ variant.SerialNumber if variant else '' }}" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Mã vạch</label>
+      <input name="ma_vach" class="form-control" value="{{ variant.MaVach if variant else '' }}" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Màu sắc</label>
+      <input name="mau" class="form-control" value="{{ variant.MauSac if variant else '' }}" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Kích thước</label>
+      <input name="kich_thuoc" class="form-control" value="{{ variant.KichThuoc if variant else '' }}">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Tồn kho</label>
+      <input type="number" name="so_luong_ton" class="form-control" min="0" value="{{ variant.SoLuongTon if variant else 0 }}">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Giá bán riêng</label>
+      <input name="gia_ban_rieng" class="form-control" value="{{ variant.GiaBanRieng if variant and variant.GiaBanRieng is not none else '' }}">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Ảnh biến thể</label>
+      <input type="file" name="image" class="form-control" accept="image/*">
+      <div class="form-text">Upload ảnh riêng cho từng biến thể.</div>
+    </div>
+  </div>
+  {% if variant and variant.HinhAnh %}
+  <div class="mt-3 mb-3">
+    <label class="form-label d-block">Ảnh hiện tại</label>
+    <img src="{{ url_for('static', filename=variant.HinhAnh) }}" alt="{{ variant.SerialNumber }}" style="width: 160px; height: 160px; object-fit: cover; border-radius: 16px;" class="border">
+  </div>
+  {% endif %}
+  <div class="mt-4">
+    <button class="btn btn-dark">Lưu</button>
+    <a class="btn btn-outline-secondary ms-2" href="{{ url_for('admin.product_variants', pid=product.SanPhamID) }}">Hủy</a>
+  </div>
+</form>
+{% endblock %}

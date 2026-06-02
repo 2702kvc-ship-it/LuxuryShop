@@ -385,7 +385,7 @@ class NhanVien(db.Model):
     NhanVienID  = db.Column(db.Integer, primary_key=True)
     HoTen       = db.Column(db.String(100), nullable=False)
     Email       = db.Column(db.String(100), nullable=False, unique=True)
-    MatKhau     = db.Column(db.String(100), nullable=False)
+    MatKhau     = db.Column(db.String(255), nullable=False)
     SoDienThoai = db.Column(db.String(15), unique=True)
     VaiTro      = db.Column(db.String(30), default='NhanVienBanHang')
     TrangThai   = db.Column(db.Boolean, default=True)

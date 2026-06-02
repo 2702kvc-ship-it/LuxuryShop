@@ -1,0 +1,54 @@
+{% extends 'admin/base.html' %}
+{% block title %}Tổng quan — LuxuryShop{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+  <div>
+    <p class="text-uppercase text-muted small mb-1">Trang quản trị</p>
+    <h1 class="fw-bold mb-0">Tổng quan hệ thống</h1>
+  </div>
+  <div class="text-muted">Vai trò: {{ staff.VaiTro }}</div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-xl-3">
+    <div class="card card-soft h-100">
+      <div class="card-body">
+        <div class="text-muted small">Khách hàng</div>
+        <div class="display-6 fw-bold">{{ stats.customers }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="card card-soft h-100">
+      <div class="card-body">
+        <div class="text-muted small">Nhân viên</div>
+        <div class="display-6 fw-bold">{{ stats.staff }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="card card-soft h-100">
+      <div class="card-body">
+        <div class="text-muted small">Sản phẩm</div>
+        <div class="display-6 fw-bold">{{ stats.products }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="card card-soft h-100">
+      <div class="card-body">
+        <div class="text-muted small">Mã giảm giá</div>
+        <div class="display-6 fw-bold">{{ stats.discounts }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card card-soft">
+  <div class="card-body p-4">
+    <h5 class="fw-semibold mb-2">Bắt đầu quản trị</h5>
+    <p class="text-muted mb-0">Từ sidebar bên trái, bạn có thể đi đến quản lý người dùng, sản phẩm, mã giảm giá và đơn hàng. Đây là khung nền ban đầu để mình sẽ gắn CRUD thật vào sau.</p>
+  </div>
+</div>
+{% endblock %}

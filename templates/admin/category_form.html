@@ -1,0 +1,32 @@
+{% extends 'admin/base.html' %}
+{% block title %}{{ 'Sửa' if category else 'Thêm' }} danh mục — LuxuryShop{% endblock %}
+
+{% block content %}
+<h1 class="fw-bold mb-4">{{ 'Sửa' if category else 'Thêm' }} danh mục</h1>
+
+<form method="POST">
+  <div class="mb-3">
+    <label class="form-label">Tên danh mục</label>
+    <input name="ten" class="form-control" value="{{ category.TenDanhMuc if category else '' }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Danh mục cha</label>
+    <select name="cha_id" class="form-select">
+      <option value="">-- Không có --</option>
+      {% for item in categories or [] %}
+        <option value="{{ item.DanhMucID }}" {% if category and category.DanhMucChaID == item.DanhMucID %}selected{% endif %}>{{ item.TenDanhMuc }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Mô tả</label>
+    <textarea name="mo_ta" class="form-control" rows="4">{{ category.MoTa if category else '' }}</textarea>
+  </div>
+  <div class="form-check mb-3">
+    <input class="form-check-input" type="checkbox" name="trang_thai" id="cat_trang_thai" {% if not category or category.TrangThai %}checked{% endif %}>
+    <label class="form-check-label" for="cat_trang_thai">Hoạt động</label>
+  </div>
+  <button class="btn btn-dark">Lưu</button>
+  <a class="btn btn-outline-secondary ms-2" href="{{ url_for('admin.categories') }}">Hủy</a>
+</form>
+{% endblock %}

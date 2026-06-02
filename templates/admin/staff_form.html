@@ -1,0 +1,30 @@
+{% extends 'admin/base.html' %}
+{% block title %}Thêm nhân viên — LuxuryShop{% endblock %}
+
+{% block content %}
+<h1 class="fw-bold mb-4">Thêm nhân viên</h1>
+
+<form method="POST">
+  <div class="mb-3">
+    <label class="form-label">Họ tên</label>
+    <input name="ho_ten" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input name="email" class="form-control" type="email" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Mật khẩu tạm</label>
+    <input name="mat_khau" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Vai trò</label>
+    <select name="vai_tro" class="form-select">
+      <option value="NhanVienBanHang">Nhân viên bán hàng</option>
+      <option value="Admin">Admin</option>
+    </select>
+  </div>
+  <button class="btn btn-dark">Tạo</button>
+  <a class="btn btn-outline-secondary ms-2" href="{{ url_for('admin.users') }}">Hủy</a>
+</form>
+{% endblock %}

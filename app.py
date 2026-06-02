@@ -30,12 +30,15 @@ def create_app():
 
     if __package__:
         from .blueprints.products.routes import products_bp
+        from .blueprints.admin.routes import admin_bp
         from .blueprints.auth.routes import auth_bp
     else:
         from blueprints.products.routes import products_bp
+        from blueprints.admin.routes import admin_bp
         from blueprints.auth.routes import auth_bp
 
     app.register_blueprint(products_bp, url_prefix='/products')
+    app.register_blueprint(admin_bp, url_prefix='/staff')
     app.register_blueprint(auth_bp, url_prefix='/auth')
 
     @app.cli.command('confirm-user')
@@ -56,16 +59,65 @@ def create_app():
         db.session.commit()
         click.echo(f'Da kich hoat tai khoan: {kh.Email}')
 
+    @app.cli.command('migrate-nhanvien-matkhau')
+    def migrate_nhanvien_matkhau():
+        """Alter NhanVien.MatKhau column to length 255 for common DB backends.
+
+        This runs a raw ALTER TABLE statement; review and back up your DB before running.
+        """
+        try:
+            dialect = db.engine.dialect.name
+        except Exception as e:
+            click.echo(f'Khong the lay dialect engine: {e}')
+            return
+
+        click.echo(f'Detected dialect: {dialect}')
+        conn = db.engine.connect()
+        try:
+            if dialect.startswith('mssql'):
+                sql = 'ALTER TABLE NhanVien ALTER COLUMN MatKhau NVARCHAR(255) NOT NULL'
+            elif dialect.startswith('mysql'):
+                sql = 'ALTER TABLE NhanVien MODIFY MatKhau VARCHAR(255) NOT NULL'
+            elif dialect.startswith('postgres'):
+                sql = "ALTER TABLE \"NhanVien\" ALTER COLUMN \"MatKhau\" TYPE VARCHAR(255)"
+            elif dialect == 'sqlite':
+                click.echo('SQLite detected: automatic ALTER COLUMN is not supported. Please run manual migration or use a proper migration tool.')
+                return
+            else:
+                click.echo('Unsupported dialect for automated migration. Please alter the column manually.')
+                return
+
+            click.echo(f'Executing: {sql}')
+            with conn.begin():
+                conn.execute(sql)
+            click.echo('Migration executed. Verify the column type in your database.')
+        except Exception as e:
+            click.echo(f'Error executing migration: {e}')
+        finally:
+            conn.close()
+
     return app
 
 # Cho Flask-Login biết cách load user từ DB
 @login_manager.user_loader
 def load_user(user_id):
     if __package__:
-        from .models import KhachHang
+        from .models import KhachHang, NhanVien
     else:
-        from models import KhachHang
-    return db.session.get(KhachHang, int(user_id))
+        from models import KhachHang, NhanVien
+
+    # Support both 'nv-' and 'nv_' prefixes used for staff IDs.
+    if isinstance(user_id, str) and (user_id.startswith('nv-') or user_id.startswith('nv_')):
+        try:
+            # strip first three chars (nv- or nv_)
+            return db.session.get(NhanVien, int(user_id[3:]))
+        except (ValueError, TypeError):
+            return None
+
+    try:
+        return db.session.get(KhachHang, int(user_id))
+    except (ValueError, TypeError):
+        return None
 
 if __name__ == '__main__':
     app = create_app()

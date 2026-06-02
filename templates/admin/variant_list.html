@@ -1,0 +1,63 @@
+{% extends 'admin/base.html' %}
+{% block title %}Biến thể — LuxuryShop{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <p class="text-muted mb-1">Sản phẩm</p>
+    <h1 class="fw-bold mb-0">{{ product.TenSanPham }}</h1>
+  </div>
+  <div class="d-flex gap-2">
+    <a class="btn btn-outline-secondary" href="{{ url_for('admin.products') }}">Quay lại</a>
+    <a class="btn btn-dark" href="{{ url_for('admin.add_variant', pid=product.SanPhamID) }}">+ Thêm biến thể</a>
+  </div>
+</div>
+
+<div class="card card-soft">
+  <div class="card-body p-4">
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Ảnh</th>
+            <th>Serial</th>
+            <th>Màu</th>
+            <th>Kích thước</th>
+            <th>Mã vạch</th>
+            <th>Tồn kho</th>
+            <th>Giá riêng</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for variant in variants %}
+          <tr>
+            <td style="width:90px">
+              {% if variant.HinhAnh %}
+                <img src="{{ url_for('static', filename=variant.HinhAnh) }}" alt="{{ variant.SerialNumber }}" style="width:64px;height:64px;object-fit:cover;border-radius:12px;">
+              {% else %}
+                <div class="bg-light border rounded-3 d-flex align-items-center justify-content-center" style="width:64px;height:64px;">-</div>
+              {% endif %}
+            </td>
+            <td>{{ variant.SerialNumber }}</td>
+            <td>{{ variant.MauSac }}</td>
+            <td>{{ variant.KichThuoc or '-' }}</td>
+            <td>{{ variant.MaVach }}</td>
+            <td>{{ variant.SoLuongTon }}</td>
+            <td>{{ variant.GiaBanRieng if variant.GiaBanRieng is not none else '-' }}</td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.edit_variant', pid=product.SanPhamID, vid=variant.BienTheID) }}">Sửa</a>
+              <form method="POST" action="{{ url_for('admin.delete_variant', pid=product.SanPhamID, vid=variant.BienTheID) }}" style="display:inline-block" onsubmit="return confirm('Xác nhận xóa biến thể?')">
+                <button class="btn btn-sm btn-outline-danger">Xóa</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="8" class="text-muted">Chưa có biến thể nào.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

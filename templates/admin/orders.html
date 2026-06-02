@@ -1,0 +1,41 @@
+{% extends 'admin/base.html' %}
+{% block title %}Đơn hàng — LuxuryShop{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="fw-bold mb-1">Đơn hàng</h1>
+    <p class="text-muted mb-0">Khung quản trị đơn hàng ban đầu.</p>
+  </div>
+  <button class="btn btn-dark" disabled>Xuất báo cáo</button>
+</div>
+
+<div class="card card-soft">
+  <div class="card-body p-4">
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Mã đơn</th>
+            <th>Khách hàng</th>
+            <th>Tổng tiền</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in order_list %}
+          <tr>
+            <td>{{ item.MaDonHang }}</td>
+            <td>{{ item.khach_hang.HoTen if item.khach_hang else '-' }}</td>
+            <td>{{ item.ThanhToan }}</td>
+            <td>{{ item.TrangThai }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" class="text-muted">Chưa có đơn hàng.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

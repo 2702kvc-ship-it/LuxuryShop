@@ -9,10 +9,10 @@ from datetime import datetime
 
 try:
     from ...extensions import db, mail
-    from ...models import KhachHang
+    from ...models import KhachHang, NhanVien
 except ImportError:
     from extensions import db, mail
-    from models import KhachHang
+    from models import KhachHang, NhanVien
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -159,34 +159,68 @@ def resend_confirm():
 # ─── ĐĂNG NHẬP ───────────────────────────────────────────────────────────────
 @auth_bp.route('/dang-nhap', methods=['GET', 'POST'])
 def login():
+    # Keep legacy route but send users to the customer login page.
+    return redirect(url_for('auth.login_khach'))
+
+
+@auth_bp.route('/dang-nhap-khach', methods=['GET', 'POST'])
+def login_khach():
     if current_user.is_authenticated:
         return redirect(url_for('products.index'))
 
     if request.method == 'POST':
-        email      = request.form.get('email', '').strip().lower()
-        mat_khau   = request.form.get('mat_khau', '')
-        nho_toi    = request.form.get('nho_toi') == 'on'
+        email = request.form.get('email', '').strip().lower()
+        mat_khau = request.form.get('mat_khau', '')
+        nho_toi = request.form.get('nho_toi') == 'on'
 
         kh = KhachHang.query.filter_by(Email=email).first()
-
         if not kh or not check_password_hash(kh.MatKhau, mat_khau):
             flash('Email hoặc mật khẩu không đúng.', 'danger')
-            return render_template('login.html', email=email)
+            return render_template('login_khach.html', email=email)
 
         if kh.HangThanhVien == 'Pending':
             flash('Tài khoản chưa xác nhận email. Vui lòng kiểm tra hộp thư.', 'warning')
-            return render_template('login.html', email=email)
+            return render_template('login_khach.html', email=email)
 
         login_user(kh, remember=nho_toi)
         flash(f'Chào mừng trở lại, {kh.HoTen}!', 'success')
 
-        # Về trang trước nếu bị redirect đến login
         next_page = request.args.get('next')
         if not _is_safe_redirect_url(next_page):
             next_page = None
-        return redirect(next_page or url_for('products.index'))
+        return redirect(next_page or url_for('admin.dashboard'))
 
-    return render_template('login.html')
+    return render_template('login_khach.html')
+
+
+@auth_bp.route('/dang-nhap-nhanvien', methods=['GET', 'POST'])
+def login_nhanvien():
+    if current_user.is_authenticated:
+        return redirect(url_for('products.index'))
+
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip().lower()
+        mat_khau = request.form.get('mat_khau', '')
+        nho_toi = request.form.get('nho_toi') == 'on'
+
+        nv = NhanVien.query.filter_by(Email=email).first()
+        if not nv or not check_password_hash(nv.MatKhau, mat_khau):
+            flash('Email hoặc mật khẩu không đúng.', 'danger')
+            return render_template('login_nhanvien.html', email=email)
+
+        if not nv.TrangThai:
+            flash('Tài khoản nhân viên đang bị khóa.', 'danger')
+            return render_template('login_nhanvien.html', email=email)
+
+        login_user(nv, remember=nho_toi)
+        flash(f'Chào mừng nhân viên, {nv.HoTen}!', 'success')
+
+        next_page = request.args.get('next')
+        if not _is_safe_redirect_url(next_page):
+            next_page = None
+        return redirect(next_page or url_for('admin.dashboard'))
+
+    return render_template('login_nhanvien.html')
 
 
 # ─── ĐĂNG XUẤT ───────────────────────────────────────────────────────────────

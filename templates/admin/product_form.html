@@ -1,0 +1,121 @@
+{% extends 'admin/base.html' %}
+{% block title %}{{ 'Sửa' if product else 'Thêm' }} sản phẩm — LuxuryShop{% endblock %}
+
+{% block content %}
+<h1 class="fw-bold mb-4">{{ 'Sửa' if product else 'Thêm' }} sản phẩm</h1>
+
+<form method="POST" enctype="multipart/form-data">
+  <div class="mb-3">
+    <label class="form-label">Tên sản phẩm</label>
+    <input name="ten" class="form-control" value="{{ product.TenSanPham if product else '' }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Mã sản phẩm</label>
+    <input name="ma" class="form-control" value="{{ product.MaSanPham if product else '' }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Giá bán</label>
+    <input name="gia" class="form-control" value="{{ product.GiaBan if product else '' }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Giá gốc</label>
+    <input name="gia_goc" class="form-control" value="{{ product.GiaGoc if product else '' }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Thương hiệu</label>
+    <select name="thuong_hieu_id" class="form-select" required>
+      <option value="">-- Chọn thương hiệu --</option>
+      {% for brand in brands or [] %}
+        <option value="{{ brand.ThuongHieuID }}" {% if product and product.ThuongHieuID == brand.ThuongHieuID %}selected{% endif %}>{{ brand.TenThuongHieu }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Danh mục</label>
+    <select name="danh_muc_id" class="form-select" required>
+      <option value="">-- Chọn danh mục --</option>
+      {% for category in categories or [] %}
+        <option value="{{ category.DanhMucID }}" {% if product and product.DanhMucID == category.DanhMucID %}selected{% endif %}>{{ category.TenDanhMuc }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Chất liệu</label>
+    <input name="chat_lieu" class="form-control" value="{{ product.ChatLieu if product else '' }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Xuất xứ</label>
+    <input name="xuat_xu" class="form-control" value="{{ product.XuatXu if product else 'Việt Nam' }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Mô tả</label>
+    <textarea name="mo_ta" class="form-control" rows="4">{{ product.MoTa if product else '' }}</textarea>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Trạng thái</label>
+    <select name="trang_thai" class="form-select">
+      <option value="DangBan" {% if not product or product.TrangThai == 'DangBan' %}selected{% endif %}>Đang bán</option>
+      <option value="TamDung" {% if product and product.TrangThai == 'TamDung' %}selected{% endif %}>Tạm dừng</option>
+      <option value="NgungBan" {% if product and product.TrangThai == 'NgungBan' %}selected{% endif %}>Ngừng bán</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Ảnh sản phẩm</label>
+    <input type="file" name="images" class="form-control" multiple accept="image/*">
+    <div class="form-text">Bạn có thể chọn nhiều ảnh. Khi có nhiều ảnh, hãy chọn ảnh đại diện bên dưới.</div>
+  </div>
+  <div class="mb-3 d-none" id="main-image-wrapper">
+    <label class="form-label">Ảnh đại diện</label>
+    <select class="form-select" name="main_image_index" id="main-image-index">
+      <option value="0">Ảnh đầu tiên</option>
+    </select>
+  </div>
+  {% if product and product.hinh_anhs %}
+  <div class="mb-3">
+    <label class="form-label d-block">Ảnh hiện có</label>
+    <div class="d-flex flex-wrap gap-3">
+      {% for image in product.hinh_anhs %}
+      <div class="border rounded-3 p-2 bg-white">
+        <img src="{{ url_for('static', filename=image.DuongDan) }}" alt="{{ product.TenSanPham }}" style="width: 96px; height: 96px; object-fit: cover;">
+        <div class="small text-muted mt-1">{{ 'Ảnh chính' if image.LaAnhChinh else 'Ảnh phụ' }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  <button class="btn btn-dark">Lưu</button>
+  <a class="btn btn-outline-secondary ms-2" href="{{ url_for('admin.products') }}">Hủy</a>
+</form>
+
+<script>
+  (function () {
+    const fileInput = document.querySelector('input[name="images"]');
+    const wrapper = document.getElementById('main-image-wrapper');
+    const select = document.getElementById('main-image-index');
+
+    function refreshMainImagePicker() {
+      const files = fileInput.files || [];
+      select.innerHTML = '';
+
+      if (files.length > 1) {
+        for (let i = 0; i < files.length; i += 1) {
+          const option = document.createElement('option');
+          option.value = String(i);
+          option.textContent = `${i + 1}. ${files[i].name}`;
+          select.appendChild(option);
+        }
+        wrapper.classList.remove('d-none');
+      } else {
+        const option = document.createElement('option');
+        option.value = '0';
+        option.textContent = 'Ảnh đầu tiên';
+        select.appendChild(option);
+        wrapper.classList.add('d-none');
+      }
+    }
+
+    fileInput.addEventListener('change', refreshMainImagePicker);
+    refreshMainImagePicker();
+  })();
+</script>
+{% endblock %}

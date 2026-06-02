@@ -1,0 +1,48 @@
+{% extends 'admin/base.html' %}
+{% block title %}Danh mục — LuxuryShop{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="fw-bold mb-1">Danh mục</h1>
+    <p class="text-muted mb-0">Quản lý danh sách danh mục.</p>
+  </div>
+  <a class="btn btn-dark" href="{{ url_for('admin.add_category') }}">+ Thêm danh mục</a>
+</div>
+
+<div class="card card-soft">
+  <div class="card-body p-4">
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Tên</th>
+            <th>Danh mục cha</th>
+            <th>Mô tả</th>
+            <th>Trạng thái</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for category in category_list %}
+          <tr>
+            <td>{{ category.TenDanhMuc }}</td>
+            <td>{{ category.danh_muc_cha.TenDanhMuc if category.danh_muc_cha else '-' }}</td>
+            <td>{{ category.MoTa or '-' }}</td>
+            <td>{{ 'Hoạt động' if category.TrangThai else 'Ngưng' }}</td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.edit_category', cid=category.DanhMucID) }}">Sửa</a>
+              <form method="POST" action="{{ url_for('admin.delete_category', cid=category.DanhMucID) }}" style="display:inline-block" onsubmit="return confirm('Xác nhận xóa danh mục?')">
+                <button class="btn btn-sm btn-outline-danger">Xóa</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5" class="text-muted">Chưa có danh mục nào.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

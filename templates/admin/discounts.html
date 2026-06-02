@@ -1,0 +1,48 @@
+{% extends 'admin/base.html' %}
+{% block title %}Mã giảm giá — LuxuryShop{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="fw-bold mb-1">Mã giảm giá</h1>
+    <p class="text-muted mb-0">Khung quản trị mã giảm giá ban đầu.</p>
+  </div>
+  <a class="btn btn-dark" href="{{ url_for('admin.add_discount') }}">+ Thêm mã</a>
+</div>
+
+<div class="card card-soft">
+  <div class="card-body p-4">
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Mã</th>
+            <th>Loại</th>
+            <th>Giá trị</th>
+            <th>Trạng thái</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in discount_list %}
+          <tr>
+            <td>{{ item.MaCode }}</td>
+            <td>{{ item.LoaiGiam }}</td>
+            <td>{{ item.GiaTri }}</td>
+            <td>{{ 'Hoạt động' if item.TrangThai else 'Ngưng' }}</td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.edit_discount', mid=item.MaGiamGiaID) }}">Sửa</a>
+              <form method="POST" action="{{ url_for('admin.delete_discount', mid=item.MaGiamGiaID) }}" style="display:inline-block" onsubmit="return confirm('Xác nhận xóa?')">
+                <button class="btn btn-sm btn-outline-danger">Xóa</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5" class="text-muted">Chưa có mã giảm giá.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

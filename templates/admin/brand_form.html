@@ -1,0 +1,35 @@
+{% extends 'admin/base.html' %}
+{% block title %}{{ 'Sửa' if brand else 'Thêm' }} thương hiệu — LuxuryShop{% endblock %}
+
+{% block content %}
+<h1 class="fw-bold mb-4">{{ 'Sửa' if brand else 'Thêm' }} thương hiệu</h1>
+
+<form method="POST">
+  <div class="mb-3">
+    <label class="form-label">Tên thương hiệu</label>
+    <input name="ten" class="form-control" value="{{ brand.TenThuongHieu if brand else '' }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Quốc gia xuất xứ</label>
+    <input name="quoc_gia" class="form-control" value="{{ brand.QuocGiaXuatXu if brand else '' }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Năm thành lập</label>
+    <input type="number" name="nam" class="form-control" value="{{ brand.NamThanhLap if brand and brand.NamThanhLap else '' }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Mô tả</label>
+    <textarea name="mo_ta" class="form-control" rows="4">{{ brand.MoTa if brand else '' }}</textarea>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Logo path</label>
+    <input name="logo" class="form-control" value="{{ brand.Logo if brand else '' }}">
+  </div>
+  <div class="form-check mb-3">
+    <input class="form-check-input" type="checkbox" name="trang_thai" id="brand_trang_thai" {% if not brand or brand.TrangThai %}checked{% endif %}>
+    <label class="form-check-label" for="brand_trang_thai">Hoạt động</label>
+  </div>
+  <button class="btn btn-dark">Lưu</button>
+  <a class="btn btn-outline-secondary ms-2" href="{{ url_for('admin.brands') }}">Hủy</a>
+</form>
+{% endblock %}

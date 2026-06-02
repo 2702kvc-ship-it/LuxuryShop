@@ -1,0 +1,61 @@
+{% extends 'admin/base.html' %}
+{% block title %}{{ 'Sửa' if discount else 'Thêm' }} mã giảm giá — LuxuryShop{% endblock %}
+
+{% block content %}
+<h1 class="fw-bold mb-4">{{ 'Sửa' if discount else 'Thêm' }} mã giảm giá</h1>
+
+<form method="POST">
+  <div class="mb-3">
+    <label class="form-label">Mã</label>
+    <input name="ma" class="form-control" value="{{ discount.MaCode if discount else '' }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Loại</label>
+    <select name="loai" class="form-select">
+      <option value="PhanTram" {% if discount and discount.LoaiGiam=='PhanTram' %}selected{% endif %}>Phần trăm</option>
+      <option value="SoTienCoDinh" {% if discount and discount.LoaiGiam=='SoTienCoDinh' %}selected{% endif %}>Số tiền cố định</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Giá trị</label>
+    <input name="gia" class="form-control" value="{{ discount.GiaTri if discount else '' }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Giảm tối đa</label>
+    <input name="giam_toi_da" class="form-control" value="{{ discount.GiamToiDa if discount and discount.GiamToiDa is not none else '' }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Đơn hàng tối thiểu</label>
+    <input name="don_hang_toi_thieu" class="form-control" value="{{ discount.DonHangToiThieu if discount else '0' }}">
+  </div>
+  <div class="row g-3">
+    <div class="col-md-6 mb-3">
+      <label class="form-label">Ngày bắt đầu</label>
+      <input type="date" name="ngay_bat_dau" class="form-control" value="{{ discount.NgayBatDau.isoformat() if discount and discount.NgayBatDau else '' }}">
+    </div>
+    <div class="col-md-6 mb-3">
+      <label class="form-label">Ngày kết thúc</label>
+      <input type="date" name="ngay_ket_thuc" class="form-control" value="{{ discount.NgayKetThuc.isoformat() if discount and discount.NgayKetThuc else '' }}">
+    </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Số lượt tối đa</label>
+    <input name="so_luot_toi_da" class="form-control" value="{{ discount.SoLuotToiDa if discount and discount.SoLuotToiDa is not none else '' }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Thương hiệu áp dụng</label>
+    <select name="thuong_hieu_id" class="form-select">
+      <option value="">-- Tất cả thương hiệu --</option>
+      {% for brand in brands or [] %}
+        <option value="{{ brand.ThuongHieuID }}" {% if discount and discount.ThuongHieuID == brand.ThuongHieuID %}selected{% endif %}>{{ brand.TenThuongHieu }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="form-check mb-3">
+    <input class="form-check-input" type="checkbox" name="trang_thai" id="trang_thai" {% if not discount or discount.TrangThai %}checked{% endif %}>
+    <label class="form-check-label" for="trang_thai">Hoạt động</label>
+  </div>
+  <button class="btn btn-dark">Lưu</button>
+  <a class="btn btn-outline-secondary ms-2" href="{{ url_for('admin.discounts') }}">Hủy</a>
+</form>
+{% endblock %}

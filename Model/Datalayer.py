@@ -5,7 +5,7 @@ Mọi hàm chỉ đọc/ghi DB, trả về object hoặc None/list.
 """
 
 from extensions import db
-from models import (
+from Model.Models import (
     ThuongHieu, DanhMuc, SanPham, GiayChungNhan,
     BienTheSanPham, HinhAnhSanPham, KhachHang,
     ChuongTrinhVIP, DonHang, ChiTietDonHang,

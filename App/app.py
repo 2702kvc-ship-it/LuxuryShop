@@ -44,7 +44,7 @@ def create_app():
 # ── Flask-Login user loader ──
 @login_manager.user_loader
 def load_user(user_id):
-    from models import KhachHang, NhanVien
+    from Model.Models import KhachHang, NhanVien
     if user_id.startswith('nv-'):
         return db.session.get(NhanVien, int(user_id[3:]))
     return db.session.get(KhachHang, int(user_id))

@@ -25,7 +25,7 @@ notepad .env
 4. Run the app (from the `LuxuryShop` folder):
 
 ```powershell
-set FLASK_APP=app
+set FLASK_APP=App/app.py  # address of our app
 python -m flask run
 ```
 

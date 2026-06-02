@@ -9,8 +9,8 @@ except Exception:
     pass
 
 if __package__:
-    from .config import Config
-    from .extensions import db, login_manager, mail
+    from ..config import Config
+    from ..extensions import db, login_manager, mail
 else:
     from config import Config
     from extensions import db, login_manager, mail
@@ -29,8 +29,8 @@ def create_app():
     login_manager.init_app(app)
 
     if __package__:
-        from .blueprints.products.routes import products_bp
-        from .blueprints.auth.routes import auth_bp
+        from ..blueprints.products.routes import products_bp
+        from ..blueprints.auth.routes import auth_bp
     else:
         from blueprints.products.routes import products_bp
         from blueprints.auth.routes import auth_bp
@@ -43,7 +43,7 @@ def create_app():
     def confirm_user(email):
         """Mark a pending customer account as confirmed."""
         try:
-            from .models import KhachHang
+            from ..models import KhachHang
         except ImportError:
             from models import KhachHang
 
@@ -62,7 +62,7 @@ def create_app():
 @login_manager.user_loader
 def load_user(user_id):
     if __package__:
-        from .models import KhachHang
+        from ..models import KhachHang
     else:
         from models import KhachHang
     return db.session.get(KhachHang, int(user_id))

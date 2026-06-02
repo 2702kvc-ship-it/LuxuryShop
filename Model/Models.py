@@ -1,8 +1,8 @@
 from datetime import datetime,timezone
 from flask_login import UserMixin
-from extensions import db
+from flask_sqlalchemy import SQLAlchemy
 
-
+db= SQLAlchemy()
 # ─────────────────────────────────────────────
 # 1. ThuongHieu
 # ─────────────────────────────────────────────

@@ -7,12 +7,12 @@ from functools import wraps
 from flask import Blueprint, current_app, flash, redirect, render_template, url_for, request
 from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
-
+from extensions import db
 try:
     from ...models import KhachHang, NhanVien, SanPham, DonHang, MaGiamGia, ThuongHieu, DanhMuc, HinhAnhSanPham, BienTheSanPham
 except ImportError:
     from models import KhachHang, NhanVien, SanPham, DonHang, MaGiamGia, ThuongHieu, DanhMuc, HinhAnhSanPham, BienTheSanPham
-
+from Model.Datalayer import get_hinh_anh_by_san_pham
 admin_bp = Blueprint('admin', __name__)
 
 
@@ -82,7 +82,6 @@ def _save_product_images(product_id, uploaded_files, main_image_index=None):
             LaAnhChinh=(index == main_image_index if main_image_index is not None else (not has_existing_images and index == 0)),
             ThuTu=index + 1,
         )
-        from extensions import db
         db.session.add(image_record)
 
     return saved_paths

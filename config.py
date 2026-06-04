@@ -21,6 +21,7 @@ class Config:
         f"mssql+pyodbc://{USERNAME}:{quote_plus(PASSWORD)}"
         f"@{SERVER}/{DATABASE}"
         f"?driver={quote_plus(DRIVER)}"
+        "&TrustServerCertificate=yes"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

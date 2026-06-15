@@ -1,0 +1,55 @@
+{% extends "base_storefront.html" %}
+{% block title %}Bảo hành đơn hàng — LuxuryShop{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+  <a href="{{ url_for('khach.xem_bao_hanh') }}" class="text-decoration-none text-muted small">
+    <i class="bi bi-arrow-left"></i> Quay lại
+  </a>
+  <h4 class="fw-bold mt-1">Bảo hành đơn hàng #{{ don_hang_id }}</h4>
+</div>
+
+{% if bao_hanhs %}
+<div class="row row-cols-1 row-cols-md-2 g-3">
+  {% for bh in bao_hanhs %}
+  <div class="col">
+    <div class="card shadow-sm h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span class="fw-semibold small">
+          {{ bh.bien_the.san_pham.TenSanPham if bh.bien_the else 'N/A' }}
+        </span>
+        <span class="badge bg-{{ 'success' if bh.TrangThai == 'ConHan' else 'secondary' }}">
+          {{ 'Còn hạn' if bh.TrangThai == 'ConHan' else 'Hết hạn' }}
+        </span>
+      </div>
+      <div class="card-body small">
+        <dl class="row mb-0">
+          <dt class="col-5 text-muted">Biến thể</dt>
+          <dd class="col-7">{{ bh.bien_the.TenBienThe if bh.bien_the else 'N/A' }}</dd>
+
+          <dt class="col-5 text-muted">Serial</dt>
+          <dd class="col-7 font-monospace">{{ bh.SerialNumber or 'N/A' }}</dd>
+
+          <dt class="col-5 text-muted">Bắt đầu</dt>
+          <dd class="col-7">{{ bh.NgayBatDau.strftime('%d/%m/%Y') if bh.NgayBatDau else 'N/A' }}</dd>
+
+          <dt class="col-5 text-muted">Kết thúc</dt>
+          <dd class="col-7">{{ bh.NgayKetThuc.strftime('%d/%m/%Y') if bh.NgayKetThuc else 'N/A' }}</dd>
+
+          {% if bh.GhiChu %}
+          <dt class="col-5 text-muted">Ghi chú</dt>
+          <dd class="col-7">{{ bh.GhiChu }}</dd>
+          {% endif %}
+        </dl>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-5 text-muted">
+  <i class="bi bi-shield-x fs-1"></i>
+  <p class="mt-2">Không có thông tin bảo hành cho đơn hàng này.</p>
+</div>
+{% endif %}
+{% endblock %}

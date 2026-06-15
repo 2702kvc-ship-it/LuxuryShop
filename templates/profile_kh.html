@@ -1,0 +1,110 @@
+{% extends "base_storefront.html" %}
+{% block title %}Tài khoản của tôi — LuxuryShop{% endblock %}
+
+{% block content %}
+<h4 class="fw-bold mb-4">Tài khoản của tôi</h4>
+
+<div class="row g-4">
+
+  <!-- HỒ SƠ -->
+  <div class="col-md-4">
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold">Thông tin cá nhân</div>
+      <div class="card-body">
+        <dl class="row small mb-3">
+          <dt class="col-5 text-muted">Họ tên</dt>
+          <dd class="col-7">{{ kh.HoTen }}</dd>
+
+          <dt class="col-5 text-muted">Email</dt>
+          <dd class="col-7">{{ kh.Email }}</dd>
+
+          <dt class="col-5 text-muted">Điện thoại</dt>
+          <dd class="col-7">{{ kh.SoDienThoai or 'Chưa cập nhật' }}</dd>
+
+          <dt class="col-5 text-muted">Ngày sinh</dt>
+          <dd class="col-7">
+            {{ kh.NgaySinh.strftime('%d/%m/%Y') if kh.NgaySinh else 'Chưa cập nhật' }}
+          </dd>
+        </dl>
+
+        <!-- FORM CẬP NHẬT -->
+        <hr>
+        <p class="fw-semibold small mb-2">Cập nhật thông tin</p>
+        <form method="POST" action="{{ url_for('khach.cap_nhat_tai_khoan') }}">
+          <div class="mb-2">
+            <input type="text" name="ho_ten" class="form-control form-control-sm"
+                   placeholder="Họ tên" value="{{ kh.HoTen }}" required>
+          </div>
+          <div class="mb-2">
+            <input type="tel" name="so_dien_thoai" class="form-control form-control-sm"
+                   placeholder="Số điện thoại" value="{{ kh.SoDienThoai or '' }}">
+          </div>
+          <div class="mb-3">
+            <input type="date" name="ngay_sinh" class="form-control form-control-sm"
+                   value="{{ kh.NgaySinh.strftime('%Y-%m-%d') if kh.NgaySinh else '' }}">
+          </div>
+          <button type="submit" class="btn btn-dark btn-sm w-100">Lưu thay đổi</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIP INFO -->
+  <div class="col-md-4">
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
+        <span>Hạng thành viên</span>
+        <a href="{{ url_for('khach.xem_vip') }}" class="btn btn-outline-dark btn-sm">Chi tiết</a>
+      </div>
+      <div class="card-body text-center py-4">
+        {% if vip %}
+        <i class="bi bi-award-fill fs-1 text-warning"></i>
+        <p class="fw-bold mt-2 mb-0">{{ vip.TenHang or 'Thành viên' }}</p>
+        <small class="text-muted">Điểm tích lũy: <strong>{{ vip.DiemTichLuy or 0 }}</strong></small>
+        {% else %}
+        <i class="bi bi-award fs-1 text-muted"></i>
+        <p class="text-muted mt-2 mb-0">Chưa có hạng VIP</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ĐƠN HÀNG GẦN ĐÂY -->
+  <div class="col-md-4">
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
+        <span>Đơn hàng gần đây</span>
+        <a href="{{ url_for('khach.lich_su_don_hang') }}" class="btn btn-outline-dark btn-sm">Tất cả</a>
+      </div>
+      {% if don_hangs_gan_day %}
+      <ul class="list-group list-group-flush">
+        {% for dh in don_hangs_gan_day %}
+        <li class="list-group-item d-flex justify-content-between align-items-center small">
+          <div>
+            <a href="{{ url_for('khach.chi_tiet_don_hang', don_hang_id=dh.DonHangID) }}"
+               class="text-decoration-none fw-semibold text-dark">{{ dh.MaDonHang }}</a>
+            <br>
+            <small class="text-muted">{{ dh.NgayDat.strftime('%d/%m/%Y') if dh.NgayDat else '' }}</small>
+          </div>
+          {% set status_map = {
+            'ChoXacNhan': ('warning', 'Chờ XN'),
+            'DangXuLy':   ('info',    'Xử lý'),
+            'DangGiao':   ('primary', 'Đang giao'),
+            'DaGiao':     ('success', 'Đã giao'),
+            'DaHuy':      ('danger',  'Đã hủy'),
+          } %}
+          {% set badge, label = status_map.get(dh.TrangThai, ('secondary', dh.TrangThai)) %}
+          <span class="badge bg-{{ badge }}">{{ label }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <div class="card-body text-center text-muted small">
+        <i class="bi bi-bag-x"></i> Chưa có đơn hàng
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

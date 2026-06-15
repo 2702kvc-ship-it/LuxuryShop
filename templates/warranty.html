@@ -1,0 +1,54 @@
+{% extends "base_storefront.html" %}
+{% block title %}Bảo hành — LuxuryShop{% endblock %}
+
+{% block content %}
+<h4 class="fw-bold mb-4">Bảo hành của tôi</h4>
+
+{% if bao_hanhs %}
+<div class="card shadow-sm">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0 align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Sản phẩm / Biến thể</th>
+          <th>Ngày bắt đầu</th>
+          <th>Ngày kết thúc</th>
+          <th class="text-center">Trạng thái</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for bh in bao_hanhs %}
+        <tr>
+          <td>
+            <span class="fw-semibold small">
+              {{ bh.bien_the.san_pham.TenSanPham if bh.bien_the else 'N/A' }}
+            </span><br>
+            <small class="text-muted">{{ bh.bien_the.TenBienThe if bh.bien_the else '' }}</small>
+          </td>
+          <td>{{ bh.NgayBatDau.strftime('%d/%m/%Y') if bh.NgayBatDau else 'N/A' }}</td>
+          <td>{{ bh.NgayKetThuc.strftime('%d/%m/%Y') if bh.NgayKetThuc else 'N/A' }}</td>
+          <td class="text-center">
+            <span class="badge bg-{{ 'success' if bh.TrangThai == 'ConHan' else 'secondary' }}">
+              {{ 'Còn hạn' if bh.TrangThai == 'ConHan' else 'Hết hạn' }}
+            </span>
+          </td>
+          <td>
+            {% if bh.don_hang_id %}
+            <a href="{{ url_for('khach.bao_hanh_theo_don', don_hang_id=bh.don_hang_id) }}"
+               class="btn btn-outline-dark btn-sm">Chi tiết</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="text-center py-5 text-muted">
+  <i class="bi bi-shield-x fs-1"></i>
+  <p class="mt-2">Bạn chưa có thông tin bảo hành nào.</p>
+</div>
+{% endif %}
+{% endblock %}

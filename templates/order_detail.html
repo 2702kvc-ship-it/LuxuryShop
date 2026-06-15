@@ -1,0 +1,141 @@
+{% extends "base_storefront.html" %}
+{% block title %}Chi tiết đơn {{ dh.MaDonHang }} — LuxuryShop{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <a href="{{ url_for('khach.lich_su_don_hang') }}" class="text-decoration-none text-muted small">
+      <i class="bi bi-arrow-left"></i> Quay lại
+    </a>
+    <h4 class="fw-bold mb-0 mt-1">Đơn hàng {{ dh.MaDonHang }}</h4>
+  </div>
+  {% if dh.TrangThai == 'ChoXacNhan' %}
+  <form method="POST" action="{{ url_for('khach.huy_don_hang', don_hang_id=dh.DonHangID) }}">
+    <button type="submit" class="btn btn-outline-danger btn-sm"
+            onclick="return confirm('Bạn chắc chắn muốn hủy đơn hàng này?')">
+      <i class="bi bi-x-circle"></i> Hủy đơn
+    </button>
+  </form>
+  {% endif %}
+</div>
+
+<div class="row g-4">
+
+  <!-- THÔNG TIN ĐƠN HÀNG -->
+  <div class="col-md-5">
+    <div class="card shadow-sm h-100">
+      <div class="card-header fw-semibold">Thông tin đơn hàng</div>
+      <div class="card-body">
+        <dl class="row mb-0 small">
+          <dt class="col-6 text-muted">Mã đơn</dt>
+          <dd class="col-6 fw-semibold">{{ dh.MaDonHang }}</dd>
+
+          <dt class="col-6 text-muted">Ngày đặt</dt>
+          <dd class="col-6">{{ dh.NgayDat.strftime('%d/%m/%Y %H:%M') if dh.NgayDat else 'N/A' }}</dd>
+
+          <dt class="col-6 text-muted">Trạng thái</dt>
+          <dd class="col-6">
+            {% set status_map = {
+              'ChoXacNhan': ('warning', 'Chờ xác nhận'),
+              'DangXuLy':   ('info',    'Đang xử lý'),
+              'DangGiao':   ('primary', 'Đang giao'),
+              'DaGiao':     ('success', 'Đã giao'),
+              'DaHuy':      ('danger',  'Đã hủy'),
+            } %}
+            {% set badge, label = status_map.get(dh.TrangThai, ('secondary', dh.TrangThai)) %}
+            <span class="badge bg-{{ badge }}">{{ label }}</span>
+          </dd>
+
+          <dt class="col-6 text-muted">Địa chỉ giao</dt>
+          <dd class="col-6">{{ dh.DiaChiGiao or 'N/A' }}</dd>
+
+          <dt class="col-6 text-muted">Thanh toán</dt>
+          <dd class="col-6">{{ dh.PhuongThucThanhToan or 'N/A' }}</dd>
+
+          {% if dh.GhiChu %}
+          <dt class="col-6 text-muted">Ghi chú</dt>
+          <dd class="col-6">{{ dh.GhiChu }}</dd>
+          {% endif %}
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <!-- SẢN PHẨM TRONG ĐƠN -->
+  <div class="col-md-7">
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold">Sản phẩm</div>
+      <div class="card-body p-0">
+        <table class="table mb-0 align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Sản phẩm</th>
+              <th class="text-center">Số lượng</th>
+              <th class="text-end">Đơn giá</th>
+              <th class="text-end">Thành tiền</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ct in chi_tiets %}
+            <tr>
+              <td>
+                <span class="fw-semibold small">{{ ct.bien_the.san_pham.TenSanPham }}</span><br>
+                <small class="text-muted">{{ ct.bien_the.TenBienThe }}</small>
+              </td>
+              <td class="text-center">{{ ct.SoLuong }}</td>
+              <td class="text-end">{{ "{:,.0f}".format(ct.DonGia) }} ₫</td>
+              <td class="text-end fw-semibold">{{ "{:,.0f}".format(ct.DonGia * ct.SoLuong) }} ₫</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot class="table-light">
+            <tr>
+              <td colspan="3" class="text-end fw-bold">Tổng cộng</td>
+              <td class="text-end fw-bold text-danger fs-6">{{ "{:,.0f}".format(dh.TongTien) }} ₫</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <!-- THANH TOÁN -->
+    {% if thanh_toans %}
+    <div class="card shadow-sm mt-3">
+      <div class="card-header fw-semibold small">Lịch sử thanh toán</div>
+      <ul class="list-group list-group-flush">
+        {% for tt in thanh_toans %}
+        <li class="list-group-item d-flex justify-content-between small">
+          <span>{{ tt.NgayThanhToan.strftime('%d/%m/%Y') if tt.NgayThanhToan else 'N/A' }}
+            — {{ tt.PhuongThuc }}</span>
+          <span class="fw-semibold">{{ "{:,.0f}".format(tt.SoTien) }} ₫</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <!-- BẢO HÀNH -->
+    {% if bao_hanhs %}
+    <div class="card shadow-sm mt-3">
+      <div class="card-header fw-semibold small">Bảo hành</div>
+      <ul class="list-group list-group-flush">
+        {% for bh in bao_hanhs %}
+        <li class="list-group-item small">
+          <strong>{{ bh.bien_the.san_pham.TenSanPham if bh.bien_the else 'N/A' }}</strong><br>
+          <span class="text-muted">
+            {{ bh.NgayBatDau.strftime('%d/%m/%Y') if bh.NgayBatDau else 'N/A' }}
+            →
+            {{ bh.NgayKetThuc.strftime('%d/%m/%Y') if bh.NgayKetThuc else 'N/A' }}
+          </span>
+          <span class="badge bg-{{ 'success' if bh.TrangThai == 'ConHan' else 'secondary' }} ms-2">
+            {{ bh.TrangThai }}
+          </span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base_storefront.html" %}
+{% block title %}Lịch sử đơn hàng — LuxuryShop{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="fw-bold mb-0">Đơn hàng của tôi</h4>
+  <a href="{{ url_for('khach.tai_khoan') }}" class="btn btn-outline-secondary btn-sm">
+    <i class="bi bi-person"></i> Tài khoản
+  </a>
+</div>
+
+{% if don_hangs %}
+<div class="card shadow-sm">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0 align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Mã đơn hàng</th>
+          <th>Ngày đặt</th>
+          <th class="text-end">Tổng tiền</th>
+          <th class="text-center">Trạng thái</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for dh in don_hangs %}
+        <tr>
+          <td class="fw-semibold">{{ dh.MaDonHang }}</td>
+          <td>{{ dh.NgayDat.strftime('%d/%m/%Y') if dh.NgayDat else 'N/A' }}</td>
+          <td class="text-end">{{ "{:,.0f}".format(dh.TongTien) }} ₫</td>
+          <td class="text-center">
+            {% set status_map = {
+              'ChoXacNhan': ('warning', 'Chờ xác nhận'),
+              'DangXuLy':   ('info',    'Đang xử lý'),
+              'DangGiao':   ('primary', 'Đang giao'),
+              'DaGiao':     ('success', 'Đã giao'),
+              'DaHuy':      ('danger',  'Đã hủy'),
+            } %}
+            {% set badge, label = status_map.get(dh.TrangThai, ('secondary', dh.TrangThai)) %}
+            <span class="badge bg-{{ badge }}">{{ label }}</span>
+          </td>
+          <td>
+            <a href="{{ url_for('khach.chi_tiet_don_hang', don_hang_id=dh.DonHangID) }}"
+               class="btn btn-outline-dark btn-sm">Chi tiết</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="text-center py-5 text-muted">
+  <i class="bi bi-bag-x fs-1"></i>
+  <p class="mt-2">Bạn chưa có đơn hàng nào.</p>
+  <a href="{{ url_for('khach.trang_chu') }}" class="btn btn-dark btn-sm">Mua sắm ngay</a>
+</div>
+{% endif %}
+
+{% endblock %}

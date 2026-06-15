@@ -1,0 +1,100 @@
+{% extends "base_storefront.html" %}
+{% block title %}Hạng thành viên VIP — LuxuryShop{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+  <a href="{{ url_for('khach.tai_khoan') }}" class="text-decoration-none text-muted small">
+    <i class="bi bi-arrow-left"></i> Tài khoản
+  </a>
+  <h4 class="fw-bold mt-1">Hạng thành viên VIP</h4>
+</div>
+
+<div class="row g-4 justify-content-center">
+
+  <!-- HẠNG HIỆN TẠI -->
+  <div class="col-md-5">
+    <div class="card shadow-sm text-center">
+      <div class="card-body py-5">
+        {% if vip %}
+        <i class="bi bi-award-fill display-3 text-warning"></i>
+        <h4 class="fw-bold mt-3">{{ vip.TenHang }}</h4>
+        <p class="text-muted mb-1">Xin chào, <strong>{{ kh.HoTen }}</strong></p>
+
+        <div class="d-flex justify-content-center gap-4 mt-3">
+          <div>
+            <p class="display-6 fw-bold text-dark mb-0">{{ "{:,.0f}".format(vip.DiemTichLuy or 0) }}</p>
+            <small class="text-muted">Điểm tích lũy</small>
+          </div>
+          <div>
+            <p class="display-6 fw-bold text-dark mb-0">{{ "{:,.0f}".format(vip.TongChiTieu or 0) }}</p>
+            <small class="text-muted">Tổng chi tiêu (₫)</small>
+          </div>
+        </div>
+
+        {% if vip.NgayCapNhat %}
+        <p class="text-muted small mt-3 mb-0">
+          Cập nhật: {{ vip.NgayCapNhat.strftime('%d/%m/%Y') }}
+        </p>
+        {% endif %}
+
+        {% else %}
+        <i class="bi bi-award display-3 text-muted"></i>
+        <h5 class="mt-3 text-muted">Bạn chưa có hạng VIP</h5>
+        <p class="text-muted small">Mua sắm để tích điểm và nâng hạng thành viên!</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- QUYỀN LỢI CÁC HẠNG -->
+  <div class="col-md-7">
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold">Quyền lợi theo hạng</div>
+      <div class="card-body p-0">
+        <table class="table mb-0 small text-center align-middle">
+          <thead class="table-light">
+            <tr>
+              <th class="text-start">Hạng</th>
+              <th>Chi tiêu tối thiểu</th>
+              <th>Giảm giá</th>
+              <th>Ưu tiên hỗ trợ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="{{ 'table-warning fw-semibold' if vip and vip.TenHang == 'Đồng' else '' }}">
+              <td class="text-start">🥉 Đồng</td>
+              <td>0 ₫</td>
+              <td>0%</td>
+              <td>—</td>
+            </tr>
+            <tr class="{{ 'table-warning fw-semibold' if vip and vip.TenHang == 'Bạc' else '' }}">
+              <td class="text-start">🥈 Bạc</td>
+              <td>5,000,000 ₫</td>
+              <td>3%</td>
+              <td>Email</td>
+            </tr>
+            <tr class="{{ 'table-warning fw-semibold' if vip and vip.TenHang == 'Vàng' else '' }}">
+              <td class="text-start">🥇 Vàng</td>
+              <td>20,000,000 ₫</td>
+              <td>5%</td>
+              <td>Hotline</td>
+            </tr>
+            <tr class="{{ 'table-warning fw-semibold' if vip and vip.TenHang == 'Kim Cương' else '' }}">
+              <td class="text-start">💎 Kim Cương</td>
+              <td>50,000,000 ₫</td>
+              <td>10%</td>
+              <td>Chuyên biệt 24/7</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="alert alert-info mt-3 small mb-0">
+      <i class="bi bi-info-circle"></i>
+      Điểm tích lũy và hạng thành viên được cập nhật sau mỗi đơn hàng hoàn thành.
+    </div>
+  </div>
+
+</div>
+{% endblock %}

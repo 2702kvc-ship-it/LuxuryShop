@@ -1,0 +1,107 @@
+{% extends "base_storefront.html" %}
+{% block title %}Sản phẩm — LuxuryShop{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+
+  <!-- SIDEBAR FILTER -->
+  <div class="col-lg-3">
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold">Tìm kiếm & Lọc</div>
+      <div class="card-body">
+
+        <!-- Tìm kiếm -->
+        <form method="GET" action="{{ url_for('khach.trang_chu') }}" class="mb-3">
+          <label class="form-label small text-muted">Từ khóa</label>
+          <div class="input-group input-group-sm">
+            <input type="text" name="q" class="form-control" placeholder="Tên sản phẩm..."
+                   value="{{ keyword }}">
+            <button class="btn btn-dark" type="submit"><i class="bi bi-search"></i></button>
+          </div>
+        </form>
+
+        <hr>
+
+        <!-- Thương hiệu -->
+        <p class="fw-semibold small text-muted mb-1">Thương hiệu</p>
+        <ul class="list-unstyled">
+          <li>
+            <a class="text-decoration-none {% if not thuong_hieu_id %}fw-bold{% endif %}"
+               href="{{ url_for('khach.trang_chu') }}">Tất cả</a>
+          </li>
+          {% for th in thuong_hieus %}
+          <li>
+            <a class="text-decoration-none {% if thuong_hieu_id == th.ThuongHieuID %}fw-bold text-primary{% endif %}"
+               href="{{ url_for('khach.trang_chu', thuong_hieu_id=th.ThuongHieuID) }}">
+              {{ th.TenThuongHieu }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+
+        <hr>
+
+        <!-- Danh mục -->
+        <p class="fw-semibold small text-muted mb-1">Danh mục</p>
+        <ul class="list-unstyled">
+          <li>
+            <a class="text-decoration-none {% if not danh_muc_id %}fw-bold{% endif %}"
+               href="{{ url_for('khach.trang_chu') }}">Tất cả</a>
+          </li>
+          {% for dm in danh_mucs %}
+          <li>
+            <a class="text-decoration-none {% if danh_muc_id == dm.DanhMucID %}fw-bold text-primary{% endif %}"
+               href="{{ url_for('khach.trang_chu', danh_muc_id=dm.DanhMucID) }}">
+              {{ dm.TenDanhMuc }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCT GRID -->
+  <div class="col-lg-9">
+    {% if keyword %}
+      <p class="text-muted">Kết quả tìm kiếm cho: <strong>{{ keyword }}</strong> — {{ san_phams|length }} sản phẩm</p>
+    {% endif %}
+
+    {% if san_phams %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+      {% for sp in san_phams %}
+      <div class="col">
+        <div class="card h-100 shadow-sm">
+          {% if sp.anh_chinh %}
+          <img src="{{ sp.anh_chinh }}" class="card-img-top" alt="{{ sp.TenSanPham }}"
+               style="height:200px;object-fit:cover;">
+          {% else %}
+          <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center"
+               style="height:200px;">
+            <i class="bi bi-image text-light fs-1"></i>
+          </div>
+          {% endif %}
+          <div class="card-body d-flex flex-column">
+            <h6 class="card-title">{{ sp.TenSanPham }}</h6>
+            <p class="text-muted small mb-1">{{ sp.thuong_hieu.TenThuongHieu if sp.thuong_hieu else '' }}</p>
+            <p class="fw-bold text-danger mt-auto">
+              {{ "{:,.0f}".format(sp.GiaCoSo) }} ₫
+            </p>
+            <a href="{{ url_for('khach.chi_tiet_san_pham', san_pham_id=sp.SanPhamID) }}"
+               class="btn btn-dark btn-sm mt-2">Xem chi tiết</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5 text-muted">
+      <i class="bi bi-box-seam fs-1"></i>
+      <p class="mt-2">Không tìm thấy sản phẩm nào.</p>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

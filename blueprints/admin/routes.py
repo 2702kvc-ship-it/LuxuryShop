@@ -8,10 +8,7 @@ from flask import Blueprint, current_app, flash, redirect, render_template, url_
 from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
 from extensions import db
-try:
-    from ...Model.Models import KhachHang, NhanVien, SanPham, DonHang, MaGiamGia, ThuongHieu, DanhMuc, HinhAnhSanPham, BienTheSanPham
-except ImportError:
-    from Model.Models import KhachHang, NhanVien, SanPham, DonHang, MaGiamGia, ThuongHieu, DanhMuc, HinhAnhSanPham, BienTheSanPham
+from Model.Models import KhachHang, NhanVien, SanPham, DonHang, MaGiamGia, ThuongHieu, DanhMuc, HinhAnhSanPham, BienTheSanPham
 from Model.Datalayer import get_hinh_anh_by_san_pham
 admin_bp = Blueprint('admin', __name__)
 

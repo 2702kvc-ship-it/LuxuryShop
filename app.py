@@ -48,10 +48,8 @@ def create_app():
     @click.argument('email')
     def confirm_user(email):
         """Mark a pending customer account as confirmed."""
-        try:
-            from .models import KhachHang
-        except ImportError:
-            from models import KhachHang
+
+        from Model.Models import KhachHang
 
         kh = KhachHang.query.filter_by(Email=email.strip().lower()).first()
         if not kh:
@@ -104,10 +102,9 @@ def create_app():
 # Cho Flask-Login biết cách load user từ DB
 @login_manager.user_loader
 def load_user(user_id):
-    if __package__:
-        from .models import KhachHang, NhanVien
-    else:
-        from models import KhachHang, NhanVien
+    print("LOAD_USER CALLED")
+    print("user_id =", user_id)
+    from Model.Models import KhachHang, NhanVien
 
     # Support both 'nv-' and 'nv_' prefixes used for staff IDs.
     if isinstance(user_id, str) and (user_id.startswith('nv-') or user_id.startswith('nv_')):

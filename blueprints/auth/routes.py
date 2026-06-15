@@ -166,7 +166,7 @@ def login():
 @auth_bp.route('/dang-nhap-khach', methods=['GET', 'POST'])
 def login_khach():
     if current_user.is_authenticated:
-        return redirect(url_for('products.index'))
+        return redirect(url_for('khach.trang_chu'))  # Đang lỗi ở đây 
 
     if request.method == 'POST':
         email = request.form.get('email', '').strip().lower()
@@ -188,7 +188,7 @@ def login_khach():
         next_page = request.args.get('next')
         if not _is_safe_redirect_url(next_page):
             next_page = None
-        return redirect(next_page or url_for('admin.dashboard'))
+        return redirect(next_page or url_for('khach.trang_chu'))  # Có thể lỗi 
 
     return render_template('login_khach.html')
 

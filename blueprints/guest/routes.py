@@ -63,7 +63,7 @@ def trang_chu():
         san_phams = datalayer.get_all_san_pham()
 
     return render_template(
-        "products/index.html",
+        "products/index_kh.html",
         san_phams      = san_phams,
         thuong_hieus   = datalayer.get_all_thuong_hieu(),
         danh_mucs      = datalayer.get_all_danh_muc(),
@@ -379,7 +379,7 @@ def tai_khoan():
         datalayer.get_don_hang_by_khach_hang(current_user.KhachHangID)[:5]
     )
     return render_template(
-        "profile.html",
+        "profile_kh.html",
         kh              = current_user,
         vip             = vip,
         don_hangs_gan_day = don_hangs_gan_day,
@@ -405,7 +405,7 @@ def cap_nhat_tai_khoan():
             flash("Cập nhật thông tin thành công.", "success")
         return redirect(url_for("khach.tai_khoan"))
 
-    return render_template("profile.html", kh=current_user)
+    return render_template("profile_kh.html", kh=current_user)
 
 
 @khach_bp.route("/tai-khoan/vip")

@@ -7,12 +7,9 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 from flask_mail import Message
 from datetime import datetime
 
-try:
-    from ...extensions import db, mail
-    from ...models import KhachHang, NhanVien
-except ImportError:
-    from extensions import db, mail
-    from models import KhachHang, NhanVien
+
+from extensions import db, mail
+from Model.Models import KhachHang, NhanVien
 
 auth_bp = Blueprint('auth', __name__)
 

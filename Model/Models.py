@@ -1,7 +1,5 @@
-if __package__:
-    from .extensions import db
-else:
-    from extensions import db
+
+from extensions import db
 from datetime import datetime
 
 

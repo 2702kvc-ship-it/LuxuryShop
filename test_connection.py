@@ -1,6 +1,6 @@
 from app import create_app
 from extensions import db
-from models import SanPham, KhachHang, DonHang
+from Model.Models import SanPham, KhachHang, DonHang
 
 app = create_app()
 

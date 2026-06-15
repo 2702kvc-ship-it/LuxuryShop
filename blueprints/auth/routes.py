@@ -46,7 +46,7 @@ def gui_email(tieu_de, nguoi_nhan, noi_dung_html):
 @auth_bp.route('/dang-ky', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('products.index'))
+        return redirect(url_for('khach.trang_chu'))  
 
     if request.method == 'POST':
         ho_ten     = request.form.get('ho_ten', '').strip()

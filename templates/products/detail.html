@@ -31,7 +31,7 @@
       &nbsp;|&nbsp;
       Danh mục: <strong>{{ sp.danh_muc.TenDanhMuc if sp.danh_muc else 'N/A' }}</strong>
     </p>
-    <p class="fs-4 fw-bold text-danger">{{ "{:,.0f}".format(sp.GiaCoSo) }} ₫</p>
+    <p class="fs-4 fw-bold text-danger">{{ "{:,.0f}".format(sp.GiaBan) }} ₫</p>
 
     {% if sp.MoTa %}
     <p class="text-secondary">{{ sp.MoTa }}</p>
@@ -47,7 +47,7 @@
             <option value="">-- Chọn biến thể --</option>
             {% for bt in bien_thes %}
             <option value="{{ bt.BienTheID }}">
-              {{ bt.TenBienThe }} — {{ "{:,.0f}".format(bt.Gia) }} ₫
+              {{ "{:,.0f}".format(bt.GiaBanRieng) }} ₫
               {% if bt.SoLuongTon <= 0 %}(Hết hàng){% endif %}
             </option>
             {% endfor %}

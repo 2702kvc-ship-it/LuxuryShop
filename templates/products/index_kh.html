@@ -86,7 +86,7 @@
             <h6 class="card-title">{{ sp.TenSanPham }}</h6>
             <p class="text-muted small mb-1">{{ sp.thuong_hieu.TenThuongHieu if sp.thuong_hieu else '' }}</p>
             <p class="fw-bold text-danger mt-auto">
-              {{ "{:,.0f}".format(sp.GiaCoSo) }} ₫
+              {{ "{:,.0f}".format(sp.GiaBan) }} ₫
             </p>
             <a href="{{ url_for('khach.chi_tiet_san_pham', san_pham_id=sp.SanPhamID) }}"
                class="btn btn-dark btn-sm mt-2">Xem chi tiết</a>

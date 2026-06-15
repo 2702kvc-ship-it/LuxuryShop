@@ -8,12 +8,9 @@ try:
 except Exception:
     pass
 
-if __package__:
-    from .config import Config
-    from .extensions import db, login_manager, mail
-else:
-    from config import Config
-    from extensions import db, login_manager, mail
+
+from config import Config
+from extensions import db, login_manager, mail
 
 
 def create_app():

@@ -32,14 +32,17 @@ def create_app():
         from .blueprints.products.routes import products_bp
         from .blueprints.admin.routes import admin_bp
         from .blueprints.auth.routes import auth_bp
+        from .blueprints.guest.routes import khach_bp
     else:
         from blueprints.products.routes import products_bp
         from blueprints.admin.routes import admin_bp
         from blueprints.auth.routes import auth_bp
+        from blueprints.guest.routes import khach_bp
 
     app.register_blueprint(products_bp, url_prefix='/products')
     app.register_blueprint(admin_bp, url_prefix='/staff')
     app.register_blueprint(auth_bp, url_prefix='/auth')
+    app.register_blueprint(khach_bp, url_prefix='')
 
     @app.cli.command('confirm-user')
     @click.argument('email')

@@ -27,7 +27,7 @@
         <tr>
           <td class="fw-semibold">{{ dh.MaDonHang }}</td>
           <td>{{ dh.NgayDat.strftime('%d/%m/%Y') if dh.NgayDat else 'N/A' }}</td>
-          <td class="text-end">{{ "{:,.0f}".format(dh.TongTien) }} ₫</td>
+          <td class="text-end">{{ "{:,.0f}".format(dh.TongTienHang) }} ₫</td>
           <td class="text-center">
             {% set status_map = {
               'ChoXacNhan': ('warning', 'Chờ xác nhận'),

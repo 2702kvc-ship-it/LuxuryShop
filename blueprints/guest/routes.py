@@ -379,7 +379,7 @@ def tai_khoan():
         datalayer.get_don_hang_by_khach_hang(current_user.KhachHangID)[:5]
     )
     return render_template(
-        "profile_kh.html",
+        "products/profile_kh.html",
         kh              = current_user,
         vip             = vip,
         don_hangs_gan_day = don_hangs_gan_day,
@@ -405,7 +405,7 @@ def cap_nhat_tai_khoan():
             flash("Cập nhật thông tin thành công.", "success")
         return redirect(url_for("khach.tai_khoan"))
 
-    return render_template("profile_kh.html", kh=current_user)
+    return render_template("products/profile_kh.html", kh=current_user)
 
 
 @khach_bp.route("/tai-khoan/vip")

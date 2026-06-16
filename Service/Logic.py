@@ -94,7 +94,8 @@ def xem_gio_hang(khach_hang_id):
         gia = bt.GiaBanRieng or bt.san_pham.GiaBan
         thanh_tien = gia * item.SoLuong
         tong_tien += thanh_tien
-        result.append({
+        result.append({ 
+            'san_pham_id': bt.SanPhamID,
             'gio_hang_id': item.GioHangID,
             'bien_the_id': bt.BienTheID,
             'ten_san_pham': bt.san_pham.TenSanPham,
@@ -235,6 +236,7 @@ def dat_hang(khach_hang_id, dia_chi_giao, phuong_thuc_thanh_toan,
         'DonHangID': don_hang.DonHangID,
         'PhuongThuc': phuong_thuc_thanh_toan,
         'SoTien': float(thanh_toan_final),
+        'MaGiaoDich': 'TT-' + uuid.uuid4().hex[:10].upper(),
         'TrangThai': 'ChoPhanHoi',
     })
 

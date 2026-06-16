@@ -46,10 +46,11 @@
           <select name="bien_the_id" class="form-select form-select-sm" required>
             <option value="">-- Chọn biến thể --</option>
             {% for bt in bien_thes %}
-            <option value="{{ bt.BienTheID }}">
-              {{ "{:,.0f}".format(bt.GiaBanRieng) }} ₫
-              {% if bt.SoLuongTon <= 0 %}(Hết hàng){% endif %}
-            </option>
+              <option value="{{ bt.BienTheID }}" {% if bt.SoLuongTon <= 0 %}disabled{% endif %}>
+                {{ bt.MauSac }}{% if bt.KichThuoc %} / {{ bt.KichThuoc }}{% endif %}
+                — {{ "{:,.0f}".format(bt.gia_hien_tai() or 0) }} ₫
+                {% if bt.SoLuongTon <= 0 %}(Hết hàng){% endif %}
+              </option>
             {% endfor %}
           </select>
         </div>

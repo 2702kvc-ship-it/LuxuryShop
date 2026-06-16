@@ -227,7 +227,7 @@ def get_giamgia_vip(khach_hang_id):
     vip = get_vip_by_khach_hang(khach_hang_id)
     if not vip:
         return 0
-    return vip.MucGiamGia or 0
+    return vip.UuDaiPhanTram or 0
 def create_or_update_vip(khach_hang_id, data: dict):
     obj = get_vip_by_khach_hang(khach_hang_id)
     if obj:

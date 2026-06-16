@@ -72,11 +72,11 @@
           {% for item in items %}
           <li class="list-group-item d-flex justify-content-between align-items-center">
             <div>
-              <span class="fw-semibold small">{{ item.bien_the.san_pham.TenSanPham }}</span>
+              <span class="fw-semibold small">{{ item.ten_san_pham }}</span>
               <br>
-              <small class="text-muted">{{ item.bien_the.TenBienThe }} × {{ item.SoLuong }}</small>
+              <small class="text-muted">{{ item.mau_sac }}{% if item.kich_thuoc %} / {{ item.kich_thuoc }}{% endif %} × {{ item.so_luong }}</small>
             </div>
-            <span class="small fw-semibold">{{ "{:,.0f}".format(item.bien_the.Gia * item.SoLuong) }} ₫</span>
+            <span class="small fw-semibold">{{ "{:,.0f}".format(item.gia * item.so_luong) }} ₫</span>
           </li>
           {% endfor %}
         </ul>

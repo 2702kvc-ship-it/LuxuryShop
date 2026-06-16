@@ -101,7 +101,9 @@
 
           <div class="product-img-wrap">
             {% if sp.anh_chinh %}
-            <img src="{{ sp.anh_chinh }}" class="product-img" alt="{{ sp.TenSanPham }}">
+            <img src="{{ url_for('static', filename=sp.anh_chinh) }}" 
+              class="product-img" 
+              alt="{{ sp.TenSanPham }}">
             {% else %}
             <div class="product-empty">
               <i class="bi bi-bag-heart"></i>

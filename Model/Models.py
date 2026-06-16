@@ -72,6 +72,7 @@ class SanPham(db.Model):
     giay_chung_nans = db.relationship('GiayChungNhan', backref='san_pham', lazy=True)
     danh_gias       = db.relationship('DanhGia', backref='san_pham', lazy=True)
 
+    @property
     def anh_chinh(self):
         """Trả về ảnh chính của sản phẩm, dùng trong template."""
         anh = HinhAnhSanPham.query.filter_by(SanPhamID=self.SanPhamID, LaAnhChinh=True).first()

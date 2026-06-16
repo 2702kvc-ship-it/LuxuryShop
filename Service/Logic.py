@@ -1,4 +1,4 @@
-
+from sqlalchemy.exc import IntegrityError
 from datetime import date, timedelta
 from decimal import Decimal
 import uuid
@@ -449,8 +449,11 @@ def cap_nhat_thong_tin_ca_nhan(khach_hang_id, data: dict):
     data_sach = {k: v for k, v in data.items() if k in TRUONG_CHO_PHEP}
     if not data_sach:
         return None, "Không có trường hợp lệ để cập nhật."
-    kh = update_khach_hang(khach_hang_id, data_sach)
-    return kh, None
+    try:
+        kh = update_khach_hang(khach_hang_id, data_sach)
+        return kh, None
+    except IntegrityError:
+        return None, "Số điện thoại đã được sử dụng bởi khách hàng khác."
 
 
 def xem_thong_tin_vip(khach_hang_id):

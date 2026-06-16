@@ -7,4 +7,4 @@ products_bp = Blueprint('products', __name__)
 @products_bp.route('/')
 @login_required
 def index():
-	return render_template('products/index.html', kh=current_user)
+	return render_template('products/index_kh.html', kh=current_user)

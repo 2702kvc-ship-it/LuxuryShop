@@ -400,7 +400,10 @@ def cap_nhat_tai_khoan():
             },
         )
         if loi:
+            datalayer.db.session.rollback()  # Hủy thay đổi nếu có lỗi (nhất là lỗi trùng số điện thoại)
             flash(loi, "danger")
+            # Render lại trang hiện tại, KHÔNG redirect
+            return render_template("products/profile_kh.html", kh=current_user)
         else:
             flash("Cập nhật thông tin thành công.", "success")
         return redirect(url_for("khach.tai_khoan"))

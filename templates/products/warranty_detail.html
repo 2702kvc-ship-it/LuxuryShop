@@ -2,54 +2,117 @@
 {% block title %}Bảo hành đơn hàng — LuxuryShop{% endblock %}
 
 {% block content %}
-<div class="mb-3">
-  <a href="{{ url_for('khach.xem_bao_hanh') }}" class="text-decoration-none text-muted small">
-    <i class="bi bi-arrow-left"></i> Quay lại
-  </a>
-  <h4 class="fw-bold mt-1">Bảo hành đơn hàng #{{ don_hang_id }}</h4>
+
+<div class="collection-header mb-5">
+    <div>
+        <a href="{{ url_for('khach.xem_bao_hanh') }}"
+           class="text-decoration-none text-muted">
+            ← Quay lại bảo hành
+        </a>
+
+        <p class="hero-subtitle text-dark mt-3">
+            WARRANTY
+        </p>
+
+        <h2 class="section-title">
+            Bảo hành đơn hàng #{{ don_hang_id }}
+        </h2>
+    </div>
 </div>
 
 {% if bao_hanhs %}
-<div class="row row-cols-1 row-cols-md-2 g-3">
-  {% for bh in bao_hanhs %}
-  <div class="col">
-    <div class="card shadow-sm h-100">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <span class="fw-semibold small">
-          {{ bh.bien_the.san_pham.TenSanPham if bh.bien_the else 'N/A' }}
-        </span>
-        <span class="badge bg-{{ 'success' if bh.TrangThai == 'ConHan' else 'secondary' }}">
-          {{ 'Còn hạn' if bh.TrangThai == 'ConHan' else 'Hết hạn' }}
-        </span>
-      </div>
-      <div class="card-body small">
-        <dl class="row mb-0">
-          <dt class="col-5 text-muted">Biến thể</dt>
-          <dd class="col-7">{{ bh.bien_the.TenBienThe if bh.bien_the else 'N/A' }}</dd>
 
-          <dt class="col-5 text-muted">Serial</dt>
-          <dd class="col-7 font-monospace">{{ bh.SerialNumber or 'N/A' }}</dd>
+<div class="row g-4">
 
-          <dt class="col-5 text-muted">Bắt đầu</dt>
-          <dd class="col-7">{{ bh.NgayBatDau.strftime('%d/%m/%Y') if bh.NgayBatDau else 'N/A' }}</dd>
+    {% for bh in bao_hanhs %}
 
-          <dt class="col-5 text-muted">Kết thúc</dt>
-          <dd class="col-7">{{ bh.NgayKetThuc.strftime('%d/%m/%Y') if bh.NgayKetThuc else 'N/A' }}</dd>
+    <div class="col-lg-6">
 
-          {% if bh.GhiChu %}
-          <dt class="col-5 text-muted">Ghi chú</dt>
-          <dd class="col-7">{{ bh.GhiChu }}</dd>
-          {% endif %}
-        </dl>
-      </div>
+        <div class="product-card h-100">
+
+            <div class="p-4">
+
+                <div class="d-flex justify-content-between align-items-start mb-3">
+
+                    <div>
+                        <div class="brand-badge">
+                            Sản phẩm
+                        </div>
+
+                        <h5 class="fw-semibold">
+                            {{ bh.bien_the.san_pham.TenSanPham if bh.bien_the else 'N/A' }}
+                        </h5>
+                    </div>
+
+                    <span class="badge bg-{{ 'success' if bh.TrangThai == 'ConHan' else 'secondary' }}">
+                        {{ 'Còn hạn' if bh.TrangThai == 'ConHan' else 'Hết hạn' }}
+                    </span>
+
+                </div>
+
+                <hr>
+
+                <div class="mb-3">
+                    <div class="brand-badge">Biến thể</div>
+                    <div>{{ bh.bien_the.TenBienThe if bh.bien_the else 'N/A' }}</div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="brand-badge">Serial</div>
+                    <div class="font-monospace">
+                        {{ bh.SerialNumber or 'N/A' }}
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-6 mb-3">
+                        <div class="brand-badge">Bắt đầu</div>
+                        <div>
+                            {{ bh.NgayBatDau.strftime('%d/%m/%Y') if bh.NgayBatDau else 'N/A' }}
+                        </div>
+                    </div>
+
+                    <div class="col-6 mb-3">
+                        <div class="brand-badge">Kết thúc</div>
+                        <div>
+                            {{ bh.NgayKetThuc.strftime('%d/%m/%Y') if bh.NgayKetThuc else 'N/A' }}
+                        </div>
+                    </div>
+
+                </div>
+
+                {% if bh.GhiChu %}
+                <div class="mb-3">
+                    <div class="brand-badge">Ghi chú</div>
+                    <div>{{ bh.GhiChu }}</div>
+                </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
     </div>
-  </div>
-  {% endfor %}
+
+    {% endfor %}
+
 </div>
+
 {% else %}
-<div class="text-center py-5 text-muted">
-  <i class="bi bi-shield-x fs-1"></i>
-  <p class="mt-2">Không có thông tin bảo hành cho đơn hàng này.</p>
+
+<div class="empty-box">
+    <i class="bi bi-shield-x fs-1"></i>
+
+    <h4 class="mt-3">
+        Không có thông tin bảo hành
+    </h4>
+
+    <p>
+        Đơn hàng này chưa có dữ liệu bảo hành.
+    </p>
 </div>
+
 {% endif %}
+
 {% endblock %}

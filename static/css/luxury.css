@@ -1,0 +1,521 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+body{
+    background:#f8f5f0;
+    font-family:"Inter","Segoe UI",Arial,sans-serif;
+    color:#19110b;
+}
+
+/* NAVBAR */
+.luxury-navbar{
+    background:#fff;
+    border-bottom:1px solid #e8dfd5;
+    padding:18px 0;
+}
+
+.luxury-logo{
+    color:#19110b!important;
+    font-family:"Cormorant Garamond",serif;
+    font-size:24px;
+    font-weight:700;
+    letter-spacing:2px;
+}
+
+.luxury-menu .nav-link,
+.luxury-user .nav-link{
+    color:#19110b!important;
+    font-size:15px;
+    margin:0 12px;
+}
+
+.luxury-menu .nav-link:hover,
+.luxury-user .nav-link:hover{
+    color:#8a6a3f!important;
+}
+
+.dropdown-menu{
+    border:none;
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+}
+
+/* MAIN */
+.luxury-main{
+    min-height:80vh;
+    padding:34px;
+}
+
+/* HERO - no image */
+.luxury-hero{
+    height:280px;
+    border-radius:24px;
+    background:#f3ece3;
+    border:1px solid #e5d8c5;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:#19110b;
+    margin-bottom:45px;
+    box-shadow:none;
+}
+
+.luxury-hero h1{
+    font-family:"Cormorant Garamond",serif;
+    font-size:48px;
+    font-weight:700;
+    letter-spacing:2px;
+    margin-bottom:10px;
+    color:#19110b;
+}
+
+.luxury-hero p{
+    font-size:17px;
+    color:#5f5345;
+}
+
+.hero-subtitle{
+    letter-spacing:4px;
+    font-size:12px;
+    text-transform:uppercase;
+    color:#8a6a3f;
+    font-weight:600;
+    margin-bottom:10px;
+}
+
+/* FILTER */
+.filter-card{
+    background:white;
+    border:none;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    position:sticky;
+    top:20px;
+}
+
+.filter-title{
+    background:#19110b;
+    color:white;
+    padding:18px;
+    font-weight:600;
+}
+
+.filter-heading{
+    font-size:12px;
+    letter-spacing:2px;
+    margin-top:12px;
+    margin-bottom:12px;
+    font-weight:700;
+}
+
+.filter-link{
+    display:block;
+    padding:8px 0;
+    color:#19110b;
+    text-decoration:none;
+    transition:.25s;
+}
+
+.filter-link:hover{
+    color:#8a6a3f;
+    padding-left:5px;
+}
+
+.form-control{
+    padding:12px;
+}
+
+.form-control:focus{
+    border-color:#8a6a3f;
+    box-shadow:none;
+}
+
+/* HEADER */
+.collection-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    margin-bottom:30px;
+}
+
+.section-title{
+    font-family:"Cormorant Garamond",serif;
+    font-size:34px;
+    font-weight:700;
+    margin-bottom:0;
+}
+
+/* PRODUCT */
+.product-card{
+    background:white;
+    border:none;
+    overflow:hidden;
+    transition:.3s;
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+}
+
+.product-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 18px 45px rgba(0,0,0,.12);
+}
+
+.product-img-wrap{
+    height:240px;
+    background:linear-gradient(135deg,#f6f1ea,#e9dfd3);
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.product-img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:.4s;
+}
+
+.product-card:hover .product-img{
+    transform:scale(1.05);
+}
+
+.product-empty{
+    width:100%;
+    height:100%;
+    background:linear-gradient(135deg,#f8f5f0,#e7ded2);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    color:#8a6a3f;
+}
+
+.product-empty i{
+    font-size:50px;
+    margin-bottom:10px;
+}
+
+.product-empty::after{
+    content:"Luxury Collection";
+    font-size:12px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+}
+
+.product-info{
+    padding:22px;
+    text-align:center;
+}
+
+.brand-badge{
+    display:block;
+    color:#8a6a3f;
+    font-size:11px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    margin-bottom:10px;
+}
+
+.product-name{
+    font-size:18px;
+    font-weight:600;
+    min-height:50px;
+    line-height:1.35;
+}
+
+.price{
+    font-size:20px;
+    font-weight:700;
+    margin-top:12px;
+    color:#19110b;
+}
+
+.btn-luxury{
+    display:block;
+    text-align:center;
+    text-decoration:none;
+    border:1px solid #8a6a3f;
+    color:#8a6a3f;
+    padding:11px;
+    margin-top:16px;
+    transition:.3s;
+    background:white;
+}
+
+.btn-luxury:hover{
+    background:#8a6a3f;
+    color:white;
+}
+
+/* EMPTY */
+.empty-box{
+    background:white;
+    padding:60px;
+    text-align:center;
+    color:#6b7280;
+}
+
+.empty-box i{
+    font-size:40px;
+}
+
+/* FOOTER */
+.luxury-footer{
+    background:#19110b;
+    color:white;
+    padding:40px 0;
+    margin-top:70px;
+}
+
+.footer-logo{
+    font-family:"Cormorant Garamond",serif;
+    font-size:22px;
+    letter-spacing:2px;
+    margin-bottom:10px;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+    .luxury-main{
+        padding:20px;
+    }
+
+    .luxury-hero{
+        height:230px;
+    }
+
+    .luxury-hero h1{
+        font-size:34px;
+    }
+
+    .section-title{
+        font-size:28px;
+    }
+
+    .collection-header{
+        display:block;
+    }
+}
+select.form-control{
+    cursor:pointer;
+    background:#fff;
+    border:1px solid #d8cec2;
+    color:#19110b;
+    border-radius:0;
+}
+
+select.form-control:hover{
+    border-color:#8a6a3f;
+}
+.dropdown-menu{
+    border:1px solid #e5d8c5;
+    border-radius:0;
+    padding:8px;
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+}
+
+.dropdown-item{
+    padding:10px 14px;
+    color:#19110b;
+}
+
+.dropdown-item:hover{
+    background:#f3ece3;
+    color:#8a6a3f;
+}
+.dropdown-menu{
+    max-height:250px;
+    overflow-y:auto;
+    overflow-x:hidden;
+    border:1px solid #e5d8c5;
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+}
+
+/* Thanh cuộn */
+.dropdown-menu::-webkit-scrollbar{
+    width:6px;
+}
+
+.dropdown-menu::-webkit-scrollbar-track{
+    background:#f3ece3;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb{
+    background:#8a6a3f;
+    border-radius:10px;
+}
+.dropdown-menu{
+    inset:auto !important;
+    transform:none !important;
+    top:100% !important;
+    bottom:auto !important;
+
+    max-height:250px;
+    overflow-y:auto;
+}
+/* =========================
+   LUXURY HOVER EFFECTS
+========================= */
+
+/* Logo */
+.luxury-logo{
+    transition:.3s;
+}
+
+.luxury-logo:hover{
+    color:#8a6a3f!important;
+    letter-spacing:3px;
+}
+
+/* Menu */
+.luxury-menu .nav-link,
+.luxury-user .nav-link{
+    position:relative;
+}
+
+.luxury-menu .nav-link::after,
+.luxury-user .nav-link::after{
+    content:'';
+    position:absolute;
+    left:50%;
+    bottom:-4px;
+    width:0;
+    height:1px;
+    background:#8a6a3f;
+    transform:translateX(-50%);
+    transition:.3s;
+}
+
+.luxury-menu .nav-link:hover::after,
+.luxury-user .nav-link:hover::after{
+    width:100%;
+}
+
+/* Hero */
+.luxury-hero{
+    transition:.4s;
+}
+
+.luxury-hero:hover{
+    transform:translateY(-2px);
+}
+
+/* Filter */
+.filter-card{
+    transition:.3s;
+}
+
+.filter-card:hover{
+    box-shadow:0 18px 45px rgba(0,0,0,.12);
+}
+
+/* Product Card */
+.product-card{
+    position:relative;
+}
+
+.product-card::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    border:1px solid transparent;
+    transition:.3s;
+    pointer-events:none;
+}
+
+.product-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 25px 60px rgba(0,0,0,.15);
+}
+
+.product-card:hover::after{
+    border:1px solid #c9a66b;
+}
+
+/* Product Image */
+.product-img{
+    transition:.5s ease;
+}
+
+.product-card:hover .product-img{
+    transform:scale(1.08);
+    filter:brightness(1.05);
+}
+
+/* Product Name */
+.product-name{
+    transition:.3s;
+}
+
+.product-card:hover .product-name{
+    color:#8a6a3f;
+}
+
+/* Price */
+.price{
+    transition:.3s;
+}
+
+.product-card:hover .price{
+    transform:scale(1.05);
+    color:#8a6a3f;
+}
+
+/* Brand */
+.brand-badge{
+    transition:.3s;
+}
+
+.product-card:hover .brand-badge{
+    letter-spacing:4px;
+}
+
+/* Button */
+.btn-luxury{
+    position:relative;
+    overflow:hidden;
+}
+
+.btn-luxury::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:-100%;
+    width:100%;
+    height:100%;
+    background:rgba(255,255,255,.15);
+    transition:.4s;
+}
+
+.btn-luxury:hover::before{
+    left:100%;
+}
+
+/* Dropdown */
+.dropdown-item{
+    transition:.2s;
+}
+
+.dropdown-item:hover{
+    background:#f3ece3;
+    color:#8a6a3f;
+    padding-left:20px;
+}
+
+/* Search box */
+.form-control{
+    transition:.3s;
+}
+
+.form-control:hover{
+    border-color:#c9a66b;
+}
+
+.form-control:focus{
+    border-color:#8a6a3f;
+    box-shadow:0 0 0 3px rgba(138,106,63,.1);
+}
+.filter-card .btn-luxury:hover{
+    background:white;
+    color:#8a6a3f;
+    border-color:#8a6a3f;
+    transform:none;
+}

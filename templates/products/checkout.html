@@ -1,108 +1,229 @@
+```html
 {% extends "base_storefront.html" %}
 {% block title %}Đặt hàng — LuxuryShop{% endblock %}
 
 {% block content %}
-<h4 class="fw-bold mb-4">Xác nhận đặt hàng</h4>
+
+<div class="collection-header mb-5">
+    <div>
+        <p class="hero-subtitle text-dark">CHECKOUT</p>
+        <h2 class="section-title">Xác nhận đơn hàng</h2>
+    </div>
+</div>
 
 <div class="row g-4">
 
-  <!-- FORM ĐẶT HÀNG -->
-  <div class="col-lg-7">
-    <div class="card shadow-sm mb-3">
-      <div class="card-header fw-semibold">Thông tin giao hàng</div>
-      <div class="card-body">
-        <form method="POST" action="{{ url_for('khach.dat_hang') }}" id="form-dat-hang">
-          <div class="mb-3">
-            <label class="form-label">Họ tên <span class="text-danger">*</span></label>
-            <input type="text" class="form-control form-control-sm"
-                   value="{{ kh.HoTen }}" readonly>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Địa chỉ giao hàng <span class="text-danger">*</span></label>
-            <textarea name="dia_chi_giao" class="form-control form-control-sm" rows="2"
-                      required placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành..."></textarea>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Phương thức thanh toán</label>
-            <select name="phuong_thuc_thanh_toan" class="form-select form-select-sm">
-              <option value="ChuyenKhoan">Chuyển khoản ngân hàng</option>
-              <option value="TienMat">Thanh toán khi nhận hàng (COD)</option>
-              <option value="TheNganHang">Thẻ ngân hàng</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Ghi chú</label>
-            <textarea name="ghi_chu" class="form-control form-control-sm" rows="2"
-                      placeholder="Lưu ý đặc biệt cho đơn hàng (tuỳ chọn)"></textarea>
-          </div>
-          <input type="hidden" name="ma_code" value="{{ ma_code }}">
-        </form>
-      </div>
-    </div>
+    <!-- THÔNG TIN -->
+    <div class="col-lg-7">
 
-    <!-- MÃ GIẢM GIÁ -->
-    <div class="card shadow-sm">
-      <div class="card-header fw-semibold">Mã giảm giá</div>
-      <div class="card-body">
-        <form method="POST" action="{{ url_for('khach.kiem_tra_ma_giam_gia') }}">
-          <div class="input-group input-group-sm">
-            <input type="text" name="ma_code" class="form-control"
-                   placeholder="Nhập mã giảm giá..."
-                   value="{{ ma_code }}">
-            <button class="btn btn-outline-dark" type="submit">Áp dụng</button>
-          </div>
-        </form>
-        {% if loi_ma %}
-        <p class="text-danger small mt-2 mb-0"><i class="bi bi-x-circle"></i> {{ loi_ma }}</p>
-        {% elif mgg_info and giam_gia %}
-        <p class="text-success small mt-2 mb-0">
-          <i class="bi bi-check-circle"></i> Áp dụng thành công: giảm {{ "{:,.0f}".format(giam_gia) }} ₫
-        </p>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-
-  <!-- TÓM TẮT ĐƠN HÀNG -->
-  <div class="col-lg-5">
-    <div class="card shadow-sm">
-      <div class="card-header fw-semibold">Đơn hàng của bạn</div>
-      <div class="card-body p-0">
-        <ul class="list-group list-group-flush">
-          {% for item in items %}
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-              <span class="fw-semibold small">{{ item.ten_san_pham }}</span>
-              <br>
-              <small class="text-muted">{{ item.mau_sac }}{% if item.kich_thuoc %} / {{ item.kich_thuoc }}{% endif %} × {{ item.so_luong }}</small>
+        <div class="filter-card mb-4">
+            <div class="filter-title">
+                Thông tin giao hàng
             </div>
-            <span class="small fw-semibold">{{ "{:,.0f}".format(item.gia * item.so_luong) }} ₫</span>
-          </li>
-          {% endfor %}
-        </ul>
-        <div class="p-3">
-          <div class="d-flex justify-content-between mb-1">
-            <span class="text-muted">Tạm tính</span>
-            <span>{{ "{:,.0f}".format(tong_tien) }} ₫</span>
-          </div>
-          {% if giam_gia %}
-          <div class="d-flex justify-content-between mb-1 text-success">
-            <span>Giảm giá</span>
-            <span>- {{ "{:,.0f}".format(giam_gia) }} ₫</span>
-          </div>
-          {% endif %}
-          <hr class="my-2">
-          <div class="d-flex justify-content-between fw-bold fs-5">
-            <span>Thanh toán</span>
-            <span class="text-danger">{{ "{:,.0f}".format(thanh_toan) }} ₫</span>
-          </div>
-          <button type="submit" form="form-dat-hang" class="btn btn-dark w-100 mt-3">
-            <i class="bi bi-bag-check-fill"></i> Đặt hàng ngay
-          </button>
+
+            <div class="p-4">
+
+                <form method="POST"
+                      action="{{ url_for('khach.dat_hang') }}"
+                      id="form-dat-hang">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Họ tên
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               value="{{ kh.HoTen }}"
+                               readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Địa chỉ giao hàng
+                        </label>
+
+                        <textarea
+                            name="dia_chi_giao"
+                            rows="3"
+                            class="form-control"
+                            placeholder="Nhập địa chỉ giao hàng..."
+                            required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Phương thức thanh toán
+                        </label>
+
+                        <select
+                            name="phuong_thuc_thanh_toan"
+                            class="form-select">
+
+                            <option value="ChuyenKhoan">
+                                Chuyển khoản ngân hàng
+                            </option>
+
+                            <option value="TienMat">
+                                Thanh toán khi nhận hàng (COD)
+                            </option>
+
+                            <option value="TheNganHang">
+                                Thẻ ngân hàng
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Ghi chú
+                        </label>
+
+                        <textarea
+                            name="ghi_chu"
+                            rows="3"
+                            class="form-control"
+                            placeholder="Yêu cầu đặc biệt..."></textarea>
+                    </div>
+
+                    <input type="hidden"
+                           name="ma_code"
+                           value="{{ ma_code }}">
+
+                </form>
+
+            </div>
         </div>
-      </div>
+
+        <!-- MÃ GIẢM GIÁ -->
+
+        <div class="filter-card">
+
+            <div class="filter-title">
+                Mã giảm giá
+            </div>
+
+            <div class="p-4">
+
+                <form method="POST"
+                      action="{{ url_for('khach.kiem_tra_ma_giam_gia') }}">
+
+                    <div class="input-group">
+
+                        <input
+                            type="text"
+                            name="ma_code"
+                            class="form-control"
+                            placeholder="Nhập mã giảm giá..."
+                            value="{{ ma_code }}">
+
+                        <button
+                            class="btn-luxury"
+                            type="submit">
+
+                            Áp dụng
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+                {% if loi_ma %}
+                <p class="text-danger mt-3 mb-0">
+                    {{ loi_ma }}
+                </p>
+                {% endif %}
+
+                {% if mgg_info and giam_gia %}
+                <p class="text-success mt-3 mb-0">
+                    Giảm {{ "{:,.0f}".format(giam_gia) }} ₫
+                </p>
+                {% endif %}
+
+            </div>
+
+        </div>
+
     </div>
-  </div>
+
+    <!-- ĐƠN HÀNG -->
+
+    <div class="col-lg-5">
+
+        <div class="filter-card">
+
+            <div class="filter-title">
+                Đơn hàng của bạn
+            </div>
+
+            <div class="p-4">
+
+                {% for item in items %}
+
+                <div class="mb-3">
+
+                    <div class="fw-semibold">
+                        {{ item.ten_san_pham }}
+                    </div>
+
+                    <div class="small text-muted">
+                        {{ item.mau_sac }}
+                        {% if item.kich_thuoc %}
+                            / {{ item.kich_thuoc }}
+                        {% endif %}
+                        × {{ item.so_luong }}
+                    </div>
+
+                    <div class="price mt-1">
+                        {{ "{:,.0f}".format(item.gia * item.so_luong) }} ₫
+                    </div>
+
+                </div>
+
+                <hr>
+
+                {% endfor %}
+
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Tạm tính</span>
+                    <span>{{ "{:,.0f}".format(tong_tien) }} ₫</span>
+                </div>
+
+                {% if giam_gia %}
+                <div class="d-flex justify-content-between text-success mb-2">
+                    <span>Giảm giá</span>
+                    <span>- {{ "{:,.0f}".format(giam_gia) }} ₫</span>
+                </div>
+                {% endif %}
+
+                <hr>
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <strong>Tổng thanh toán</strong>
+
+                    <div class="price">
+                        {{ "{:,.0f}".format(thanh_toan) }} ₫
+                    </div>
+                </div>
+
+                <button
+                    type="submit"
+                    form="form-dat-hang"
+                    class="btn-luxury w-100">
+
+                    ĐẶT HÀNG NGAY
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
+
 {% endblock %}
+```

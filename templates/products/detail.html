@@ -1,146 +1,247 @@
+```html
 {% extends "base_storefront.html" %}
 {% block title %}{{ sp.TenSanPham }} — LuxuryShop{% endblock %}
 
 {% block content %}
-<nav aria-label="breadcrumb" class="mb-3">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{{ url_for('khach.trang_chu') }}">Sản phẩm</a></li>
-    <li class="breadcrumb-item active">{{ sp.TenSanPham }}</li>
-  </ol>
-</nav>
 
-<div class="row g-4">
-
-  <!-- ẢNH SẢN PHẨM -->
-  <div class="col-md-5">
-    {% if sp.anh_chinh %}
-    <img src="{{ sp.anh_chinh }}" class="img-fluid rounded shadow" alt="{{ sp.TenSanPham }}">
-    {% else %}
-    <div class="bg-secondary rounded d-flex align-items-center justify-content-center"
-         style="height:350px;">
-      <i class="bi bi-image text-light fs-1"></i>
-    </div>
-    {% endif %}
-  </div>
-
-  <!-- THÔNG TIN SẢN PHẨM -->
-  <div class="col-md-7">
-    <h3 class="fw-bold">{{ sp.TenSanPham }}</h3>
-    <p class="text-muted">
-      Thương hiệu: <strong>{{ sp.thuong_hieu.TenThuongHieu if sp.thuong_hieu else 'N/A' }}</strong>
-      &nbsp;|&nbsp;
-      Danh mục: <strong>{{ sp.danh_muc.TenDanhMuc if sp.danh_muc else 'N/A' }}</strong>
-    </p>
-    <p class="fs-4 fw-bold text-danger">{{ "{:,.0f}".format(sp.GiaBan) }} ₫</p>
-
-    {% if sp.MoTa %}
-    <p class="text-secondary">{{ sp.MoTa }}</p>
-    {% endif %}
-
-    <!-- FORM THÊM VÀO GIỎ -->
-    {% if current_user.is_authenticated %}
-    <form method="POST" action="{{ url_for('khach.them_gio_hang') }}" class="mt-3">
-      <div class="row g-2 align-items-end">
-        <div class="col-auto">
-          <label class="form-label small">Biến thể</label>
-          <select name="bien_the_id" class="form-select form-select-sm" required>
-            <option value="">-- Chọn biến thể --</option>
-            {% for bt in bien_thes %}
-              <option value="{{ bt.BienTheID }}" {% if bt.SoLuongTon <= 0 %}disabled{% endif %}>
-                {{ bt.MauSac }}{% if bt.KichThuoc %} / {{ bt.KichThuoc }}{% endif %}
-                — {{ "{:,.0f}".format(bt.gia_hien_tai() or 0) }} ₫
-                {% if bt.SoLuongTon <= 0 %}(Hết hàng){% endif %}
-              </option>
-            {% endfor %}
-          </select>
-        </div>
-        <div class="col-auto">
-          <label class="form-label small">Số lượng</label>
-          <input type="number" name="so_luong" value="1" min="1" class="form-control form-control-sm"
-                 style="width:70px;">
-        </div>
-        <div class="col-auto">
-          <button type="submit" class="btn btn-dark btn-sm">
-            <i class="bi bi-cart-plus"></i> Thêm giỏ hàng
-          </button>
-        </div>
-      </div>
-    </form>
-    {% else %}
-    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-dark btn-sm mt-2">
-      Đăng nhập để mua hàng
+<div class="mb-5">
+    <a href="{{ url_for('khach.trang_chu') }}"
+       class="text-decoration-none text-muted">
+        ← Quay lại cửa hàng
     </a>
-    {% endif %}
+</div>
 
-    <!-- GIẤY CHỨNG NHẬN -->
-    {% if chung_nhans %}
-    <div class="mt-4">
-      <h6 class="fw-semibold">Giấy chứng nhận</h6>
-      <ul class="list-unstyled">
-        {% for cn in chung_nhans %}
-        <li><i class="bi bi-patch-check-fill text-success me-1"></i>{{ cn.TenChungNhan }}</li>
-        {% endfor %}
-      </ul>
+<div class="row g-5">
+
+    <!-- ẢNH -->
+
+    <div class="col-lg-6">
+
+        <div class="product-card">
+
+            <div class="product-img-wrap"
+                 style="height:550px;">
+
+                {% if sp.anh_chinh %}
+                <img src="{{ sp.anh_chinh }}"
+                     class="product-img"
+                     alt="{{ sp.TenSanPham }}">
+                {% else %}
+                <div class="product-empty">
+                    <i class="bi bi-bag-heart"></i>
+                </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
     </div>
-    {% endif %}
 
-  </div>
+    <!-- THÔNG TIN -->
+
+    <div class="col-lg-6">
+
+        <div class="hero-subtitle text-dark">
+            {{ sp.thuong_hieu.TenThuongHieu if sp.thuong_hieu else 'LuxuryShop' }}
+        </div>
+
+        <h1 class="section-title mt-2">
+            {{ sp.TenSanPham }}
+        </h1>
+
+        <div class="price mt-4 mb-4">
+            {{ "{:,.0f}".format(sp.GiaBan) }} ₫
+        </div>
+
+        <div class="mb-4">
+            <span class="brand-badge">
+                {{ sp.danh_muc.TenDanhMuc if sp.danh_muc else 'Luxury' }}
+            </span>
+        </div>
+
+        {% if sp.MoTa %}
+        <div class="mb-4 text-muted">
+            {{ sp.MoTa }}
+        </div>
+        {% endif %}
+
+        {% if current_user.is_authenticated %}
+
+        <form method="POST"
+              action="{{ url_for('khach.them_gio_hang') }}">
+
+            <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+                    Chọn biến thể
+                </label>
+
+                <select name="bien_the_id"
+                        class="form-select"
+                        required>
+
+                    <option value="">
+                        Chọn biến thể
+                    </option>
+
+                    {% for bt in bien_thes %}
+                    <option value="{{ bt.BienTheID }}"
+                            {% if bt.SoLuongTon <= 0 %}disabled{% endif %}>
+
+                        {{ bt.MauSac }}
+
+                        {% if bt.KichThuoc %}
+                            / {{ bt.KichThuoc }}
+                        {% endif %}
+
+                        — {{ "{:,.0f}".format(bt.gia_hien_tai() or 0) }} ₫
+
+                        {% if bt.SoLuongTon <= 0 %}
+                            (Hết hàng)
+                        {% endif %}
+
+                    </option>
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <div class="mb-4">
+
+                <label class="form-label fw-semibold">
+                    Số lượng
+                </label>
+
+                <input type="number"
+                       name="so_luong"
+                       value="1"
+                       min="1"
+                       class="form-control"
+                       style="width:120px;">
+
+            </div>
+
+            <button type="submit"
+                    class="btn-luxury">
+
+                THÊM VÀO GIỎ HÀNG
+
+            </button>
+
+        </form>
+
+        {% else %}
+
+        <a href="{{ url_for('auth.login') }}"
+           class="btn-luxury">
+
+            ĐĂNG NHẬP ĐỂ MUA HÀNG
+
+        </a>
+
+        {% endif %}
+
+        {% if chung_nhans %}
+        <div class="mt-5">
+
+            <h5 class="fw-semibold mb-3">
+                Chứng nhận sản phẩm
+            </h5>
+
+            {% for cn in chung_nhans %}
+            <div class="mb-2">
+
+                <i class="bi bi-patch-check-fill text-success"></i>
+
+                {{ cn.TenChungNhan }}
+
+            </div>
+            {% endfor %}
+
+        </div>
+        {% endif %}
+
+    </div>
+
 </div>
 
 <!-- ĐÁNH GIÁ -->
-<hr class="my-4">
-<h5 class="fw-semibold">Đánh giá sản phẩm</h5>
 
-{% if danh_gias %}
-<div class="row row-cols-1 row-cols-md-2 g-3 mb-4">
-  {% for dg in danh_gias %}
-  <div class="col">
-    <div class="card card-body shadow-sm">
-      <div class="d-flex justify-content-between">
-        <strong>{{ dg.khach_hang.HoTen if dg.khach_hang else 'Ẩn danh' }}</strong>
-        <span class="text-warning">
-          {% for i in range(dg.DiemSo) %}<i class="bi bi-star-fill"></i>{% endfor %}
-          {% for i in range(5 - dg.DiemSo) %}<i class="bi bi-star"></i>{% endfor %}
-        </span>
-      </div>
-      {% if dg.NhanXet %}
-      <p class="small text-secondary mb-0 mt-1">{{ dg.NhanXet }}</p>
-      {% endif %}
-      <small class="text-muted">{{ dg.NgayDanhGia.strftime('%d/%m/%Y') if dg.NgayDanhGia else '' }}</small>
+<div class="mt-5">
+
+    <div class="collection-header mb-4">
+
+        <div>
+            <p class="hero-subtitle text-dark">
+                REVIEWS
+            </p>
+
+            <h2 class="section-title">
+                Đánh giá khách hàng
+            </h2>
+        </div>
+
     </div>
-  </div>
-  {% endfor %}
-</div>
-{% else %}
-<p class="text-muted">Chưa có đánh giá nào.</p>
-{% endif %}
 
-<!-- FORM GỬI ĐÁNH GIÁ -->
-{% if da_mua and not da_danh_gia %}
-<div class="card shadow-sm mt-3" style="max-width:500px;">
-  <div class="card-header fw-semibold">Gửi đánh giá của bạn</div>
-  <div class="card-body">
-    <form method="POST" action="{{ url_for('khach.gui_danh_gia', san_pham_id=sp.SanPhamID) }}">
-      <div class="mb-3">
-        <label class="form-label">Điểm số</label>
-        <select name="diem_so" class="form-select form-select-sm" required>
-          <option value="">-- Chọn --</option>
-          {% for i in range(1, 6) %}
-          <option value="{{ i }}">{{ i }} sao</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Nhận xét (tuỳ chọn)</label>
-        <textarea name="nhan_xet" class="form-control form-control-sm" rows="3"
-                  placeholder="Chia sẻ trải nghiệm của bạn..."></textarea>
-      </div>
-      <button type="submit" class="btn btn-dark btn-sm">Gửi đánh giá</button>
-    </form>
-  </div>
+    {% if danh_gias %}
+
+    <div class="row g-4">
+
+        {% for dg in danh_gias %}
+
+        <div class="col-md-6">
+
+            <div class="filter-card">
+
+                <div class="p-4">
+
+                    <div class="d-flex justify-content-between mb-2">
+
+                        <strong>
+                            {{ dg.khach_hang.HoTen if dg.khach_hang else 'Khách hàng' }}
+                        </strong>
+
+                        <span class="text-warning">
+
+                            {% for i in range(dg.DiemSo) %}
+                            ★
+                            {% endfor %}
+
+                        </span>
+
+                    </div>
+
+                    {% if dg.NhanXet %}
+                    <p class="text-muted mb-2">
+                        {{ dg.NhanXet }}
+                    </p>
+                    {% endif %}
+
+                    <small class="text-secondary">
+                        {{ dg.NgayDanhGia.strftime('%d/%m/%Y') if dg.NgayDanhGia else '' }}
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-box">
+        Chưa có đánh giá nào.
+    </div>
+
+    {% endif %}
+
 </div>
-{% elif da_danh_gia %}
-<p class="text-success"><i class="bi bi-check-circle"></i> Bạn đã đánh giá sản phẩm này.</p>
-{% endif %}
 
 {% endblock %}
+```

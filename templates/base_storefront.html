@@ -3,59 +3,74 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>{% block title %}LuxuryShop{% endblock %}</title>
+
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/luxury.css') }}">
+
   {% block extra_css %}{% endblock %}
 </head>
+
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container">
-    <a class="navbar-brand fw-bold" href="{{ url_for('khach.trang_chu') }}">LuxuryShop</a>
+<nav class="navbar navbar-expand-lg luxury-navbar">
+  <div class="container-fluid px-5">
+
+    <a class="navbar-brand luxury-logo" href="{{ url_for('khach.trang_chu') }}">
+      LUXURYSHOP
+    </a>
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navMain">
-      <ul class="navbar-nav me-auto">
+
+      <ul class="navbar-nav mx-auto luxury-menu">
         <li class="nav-item">
           <a class="nav-link" href="{{ url_for('khach.trang_chu') }}">Sản phẩm</a>
         </li>
-      </ul>
-      <ul class="navbar-nav ms-auto align-items-center">
+
         {% if current_user.is_authenticated %}
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('khach.xem_gio_hang') }}">
-              <i class="bi bi-cart3"></i> Giỏ hàng
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('khach.lich_su_don_hang') }}">Đơn hàng</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-              <i class="bi bi-person-circle"></i> {{ current_user.HoTen }}
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="{{ url_for('khach.tai_khoan') }}">Tài khoản</a></li>
-              <li><a class="dropdown-item" href="{{ url_for('khach.xem_bao_hanh') }}">Bảo hành</a></li>
-              <li><a class="dropdown-item" href="{{ url_for('khach.xem_vip') }}">VIP</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Đăng xuất</a></li>
-            </ul>
-          </li>
-        {% else %}
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('auth.login') }}">Đăng nhập</a>
-          </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('khach.xem_gio_hang') }}">Giỏ hàng</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('khach.lich_su_don_hang') }}">Đơn hàng</a>
+        </li>
         {% endif %}
       </ul>
+
+      <ul class="navbar-nav luxury-user">
+        {% if current_user.is_authenticated %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+            <i class="bi bi-person"></i> {{ current_user.HoTen }}
+          </a>
+
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="{{ url_for('khach.tai_khoan') }}">Tài khoản</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('khach.xem_bao_hanh') }}">Bảo hành</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('khach.xem_vip') }}">VIP</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Đăng xuất</a></li>
+          </ul>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('auth.login') }}">Đăng nhập</a>
+        </li>
+        {% endif %}
+      </ul>
+
     </div>
   </div>
 </nav>
 
-<!-- FLASH MESSAGES -->
 <div class="container mt-3">
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% for category, message in messages %}
@@ -67,19 +82,20 @@
   {% endwith %}
 </div>
 
-<!-- MAIN CONTENT -->
-<main class="container my-4">
+<main class="luxury-main">
   {% block content %}{% endblock %}
 </main>
 
-<!-- FOOTER -->
-<footer class="bg-dark text-light py-3 mt-5">
+<footer class="luxury-footer">
   <div class="container text-center">
+    <div class="footer-logo">LUXURYSHOP</div>
     <small>&copy; 2025 LuxuryShop. All rights reserved.</small>
   </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 {% block extra_js %}{% endblock %}
+
 </body>
 </html>

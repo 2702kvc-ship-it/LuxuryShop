@@ -2,53 +2,128 @@
 {% block title %}Bảo hành — LuxuryShop{% endblock %}
 
 {% block content %}
-<h4 class="fw-bold mb-4">Bảo hành của tôi</h4>
+
+<div class="collection-header mb-5">
+
+    <div>
+        <p class="hero-subtitle text-dark">
+            WARRANTY
+        </p>
+
+        <h2 class="section-title">
+            Bảo hành của tôi
+        </h2>
+    </div>
+
+</div>
 
 {% if bao_hanhs %}
-<div class="card shadow-sm">
-  <div class="card-body p-0">
-    <table class="table table-hover mb-0 align-middle">
-      <thead class="table-light">
-        <tr>
-          <th>Sản phẩm / Biến thể</th>
-          <th>Ngày bắt đầu</th>
-          <th>Ngày kết thúc</th>
-          <th class="text-center">Trạng thái</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for bh in bao_hanhs %}
-        <tr>
-          <td>
-            <span class="fw-semibold small">
-              {{ bh.bien_the.san_pham.TenSanPham if bh.bien_the else 'N/A' }}
-            </span><br>
-            <small class="text-muted">{{ bh.bien_the.TenBienThe if bh.bien_the else '' }}</small>
-          </td>
-          <td>{{ bh.NgayBatDau.strftime('%d/%m/%Y') if bh.NgayBatDau else 'N/A' }}</td>
-          <td>{{ bh.NgayKetThuc.strftime('%d/%m/%Y') if bh.NgayKetThuc else 'N/A' }}</td>
-          <td class="text-center">
-            <span class="badge bg-{{ 'success' if bh.TrangThai == 'ConHan' else 'secondary' }}">
-              {{ 'Còn hạn' if bh.TrangThai == 'ConHan' else 'Hết hạn' }}
-            </span>
-          </td>
-          <td>
-            {% if bh.don_hang_id %}
-            <a href="{{ url_for('khach.bao_hanh_theo_don', don_hang_id=bh.don_hang_id) }}"
-               class="btn btn-outline-dark btn-sm">Chi tiết</a>
-            {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+
+<div class="row g-4">
+
+    {% for bh in bao_hanhs %}
+
+    <div class="col-12">
+
+        <div class="product-card">
+
+            <div class="p-4">
+
+                <div class="row align-items-center">
+
+                    <div class="col-lg-4">
+
+                        <div class="brand-badge">
+                            Sản phẩm
+                        </div>
+
+                        <div class="fw-semibold">
+                            {{ bh.bien_the.san_pham.TenSanPham if bh.bien_the else 'N/A' }}
+                        </div>
+
+                        <div class="text-muted small">
+                            {{ bh.bien_the.TenBienThe if bh.bien_the else '' }}
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-2">
+
+                        <div class="brand-badge">
+                            Bắt đầu
+                        </div>
+
+                        <div>
+                            {{ bh.NgayBatDau.strftime('%d/%m/%Y') if bh.NgayBatDau else 'N/A' }}
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-2">
+
+                        <div class="brand-badge">
+                            Kết thúc
+                        </div>
+
+                        <div>
+                            {{ bh.NgayKetThuc.strftime('%d/%m/%Y') if bh.NgayKetThuc else 'N/A' }}
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-2">
+
+                        <div class="brand-badge">
+                            Trạng thái
+                        </div>
+
+                        <span class="badge bg-{{ 'success' if bh.TrangThai == 'ConHan' else 'secondary' }}">
+                            {{ 'Còn hạn' if bh.TrangThai == 'ConHan' else 'Hết hạn' }}
+                        </span>
+
+                    </div>
+
+                    <div class="col-lg-2 text-lg-end mt-3 mt-lg-0">
+
+                        {% if bh.don_hang_id %}
+                        <a href="{{ url_for('khach.bao_hanh_theo_don', don_hang_id=bh.don_hang_id) }}"
+                           class="btn-luxury">
+
+                            Chi tiết
+
+                        </a>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
 </div>
+
 {% else %}
-<div class="text-center py-5 text-muted">
-  <i class="bi bi-shield-x fs-1"></i>
-  <p class="mt-2">Bạn chưa có thông tin bảo hành nào.</p>
+
+<div class="empty-box">
+
+    <i class="bi bi-shield-x fs-1"></i>
+
+    <h4 class="mt-3">
+        Chưa có thông tin bảo hành
+    </h4>
+
+    <p>
+        Các sản phẩm được bảo hành sẽ hiển thị tại đây.
+    </p>
+
 </div>
+
 {% endif %}
+
 {% endblock %}

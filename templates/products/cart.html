@@ -1,100 +1,183 @@
+```html
 {% extends "base_storefront.html" %}
 {% block title %}Giỏ hàng — LuxuryShop{% endblock %}
 
 {% block content %}
-<h4 class="fw-bold mb-4">Giỏ hàng của bạn</h4>
+
+<div class="collection-header mb-5">
+    <div>
+        <p class="hero-subtitle text-dark">SHOPPING BAG</p>
+        <h2 class="section-title">Giỏ hàng của bạn</h2>
+    </div>
+
+    {% if items %}
+    <div class="text-muted">
+        {{ items|length }} sản phẩm
+    </div>
+    {% endif %}
+</div>
 
 {% if items %}
 <div class="row g-4">
-  <!-- DANH SÁCH SẢN PHẨM -->
-  <div class="col-lg-8">
-    <div class="card shadow-sm">
-      <div class="card-body p-0">
-        <table class="table mb-0 align-middle">
-          <thead class="table-light">
-            <tr>
-              <th>Sản phẩm</th>
-              <th class="text-center">Giá</th>
-              <th class="text-center" style="width:120px;">Số lượng</th>
-              <th class="text-center">Thành tiền</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for item in items %}
-            <tr>
-              <td>
-                <a href="{{ url_for('khach.chi_tiet_san_pham', san_pham_id=item.san_pham_id) }}"
-                   class="text-decoration-none fw-semibold text-dark">
-                  {{ item.ten_san_pham }}
-                </a>
-                <br>
-                <small class="text-muted">{{ item.mau_sac }} - {{ item.kich_thuoc }}</small>
-              </td>
-              <td class="text-center">{{ "{:,.0f}".format(item.gia) }} ₫</td>
-              <td class="text-center">
-                <form method="POST" action="{{ url_for('khach.cap_nhat_gio_hang') }}"
-                      class="d-flex align-items-center justify-content-center gap-1">
-                  <input type="hidden" name="bien_the_id" value="{{ item.bien_the_id }}">
-                  <input type="number" name="so_luong" value="{{ item.so_luong }}" min="1"
-                         class="form-control form-control-sm text-center" style="width:60px;">
-                  <button type="submit" class="btn btn-outline-secondary btn-sm">
-                    <i class="bi bi-arrow-repeat"></i>
-                  </button>
-                </form>
-              </td>
-              <td class="text-center fw-semibold text-danger">
-                {{ "{:,.0f}".format(item.gia * item.so_luong) }} ₫
-              </td>
-              <td>
-                <form method="POST" action="{{ url_for('khach.xoa_gio_hang') }}">
-                  <input type="hidden" name="bien_the_id" value="{{ item.bien_the_id }}">
-                  <button type="submit" class="btn btn-link text-danger p-0"
-                          onclick="return confirm('Xóa sản phẩm này?')">
-                    <i class="bi bi-trash3"></i>
-                  </button>
-                </form>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
 
-    <a href="{{ url_for('khach.trang_chu') }}" class="btn btn-outline-secondary btn-sm mt-3">
-      <i class="bi bi-arrow-left"></i> Tiếp tục mua sắm
-    </a>
-  </div>
+    <!-- DANH SÁCH SẢN PHẨM -->
+    <div class="col-lg-8">
 
-  <!-- TÓM TẮT GIỎ HÀNG -->
-  <div class="col-lg-4">
-    <div class="card shadow-sm">
-      <div class="card-header fw-semibold">Tóm tắt đơn hàng</div>
-      <div class="card-body">
-        <div class="d-flex justify-content-between mb-2">
-          <span>Tạm tính</span>
-          <span>{{ "{:,.0f}".format(tong_tien) }} ₫</span>
+        {% for item in items %}
+        <div class="product-card mb-4">
+
+            <div class="row g-0 align-items-center">
+
+                <div class="col-md-3">
+                    <div class="product-img-wrap">
+                        <div class="product-empty">
+                            <i class="bi bi-bag-heart"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-9">
+                    <div class="p-4">
+
+                        <div class="d-flex justify-content-between">
+
+                            <div>
+                                <h5 class="product-name mb-2">
+                                    {{ item.ten_san_pham }}
+                                </h5>
+
+                                <div class="brand-badge">
+                                    {{ item.mau_sac }} • {{ item.kich_thuoc }}
+                                </div>
+
+                                <div class="price mt-2">
+                                    {{ "{:,.0f}".format(item.gia) }} ₫
+                                </div>
+                            </div>
+
+                            <form method="POST"
+                                  action="{{ url_for('khach.xoa_gio_hang') }}">
+                                <input type="hidden"
+                                       name="bien_the_id"
+                                       value="{{ item.bien_the_id }}">
+
+                                <button class="btn btn-link text-danger">
+                                    <i class="bi bi-trash3 fs-5"></i>
+                                </button>
+                            </form>
+
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between align-items-center">
+
+                            <form method="POST"
+                                  action="{{ url_for('khach.cap_nhat_gio_hang') }}"
+                                  class="d-flex align-items-center gap-2">
+
+                                <input type="hidden"
+                                       name="bien_the_id"
+                                       value="{{ item.bien_the_id }}">
+
+                                <input type="number"
+                                       name="so_luong"
+                                       value="{{ item.so_luong }}"
+                                       min="1"
+                                       class="form-control"
+                                       style="width:90px;">
+
+                                <button type="submit"
+                                        class="btn-luxury">
+                                    Cập nhật
+                                </button>
+                            </form>
+
+                            <div>
+                                <span class="text-muted">Thành tiền</span>
+                                <div class="price">
+                                    {{ "{:,.0f}".format(item.gia * item.so_luong) }} ₫
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
         </div>
-        <hr>
-        <div class="d-flex justify-content-between fw-bold fs-5">
-          <span>Tổng cộng</span>
-          <span class="text-danger">{{ "{:,.0f}".format(tong_tien) }} ₫</span>
-        </div>
-        <a href="{{ url_for('khach.dat_hang') }}" class="btn btn-dark w-100 mt-3">
-          <i class="bi bi-bag-check"></i> Tiến hành đặt hàng
+        {% endfor %}
+
+        <a href="{{ url_for('khach.trang_chu') }}"
+           class="btn-luxury">
+            ← Tiếp tục mua sắm
         </a>
-      </div>
+
     </div>
-  </div>
+
+    <!-- TÓM TẮT -->
+    <div class="col-lg-4">
+
+        <div class="filter-card">
+
+            <div class="filter-title">
+                Tóm tắt đơn hàng
+            </div>
+
+            <div class="p-4">
+
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Tạm tính</span>
+                    <span>{{ "{:,.0f}".format(tong_tien) }} ₫</span>
+                </div>
+
+                <hr>
+
+                <div class="d-flex justify-content-between mb-4">
+                    <strong>Tổng cộng</strong>
+
+                    <div class="price">
+                        {{ "{:,.0f}".format(tong_tien) }} ₫
+                    </div>
+                </div>
+
+                <a href="{{ url_for('khach.dat_hang') }}"
+                   class="btn-luxury w-100 text-center">
+                    TIẾN HÀNH ĐẶT HÀNG
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
+
 {% else %}
-<div class="text-center py-5 text-muted">
-  <i class="bi bi-cart-x fs-1"></i>
-  <p class="mt-2">Giỏ hàng của bạn đang trống.</p>
-  <a href="{{ url_for('khach.trang_chu') }}" class="btn btn-dark btn-sm">Mua sắm ngay</a>
+
+<div class="empty-box">
+
+    <i class="bi bi-cart-x"></i>
+
+    <h4 class="mt-3">
+        Giỏ hàng của bạn đang trống
+    </h4>
+
+    <p>
+        Hãy khám phá những sản phẩm cao cấp của LuxuryShop.
+    </p>
+
+    <a href="{{ url_for('khach.trang_chu') }}"
+       class="btn-luxury">
+        MUA SẮM NGAY
+    </a>
+
 </div>
+
 {% endif %}
 
 {% endblock %}
+```

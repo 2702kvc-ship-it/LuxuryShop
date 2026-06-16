@@ -2,99 +2,251 @@
 {% block title %}Hạng thành viên VIP — LuxuryShop{% endblock %}
 
 {% block content %}
-<div class="mb-3">
-  <a href="{{ url_for('khach.tai_khoan') }}" class="text-decoration-none text-muted small">
-    <i class="bi bi-arrow-left"></i> Tài khoản
-  </a>
-  <h4 class="fw-bold mt-1">Hạng thành viên VIP</h4>
+
+<div class="collection-header mb-5">
+
+    <div>
+        <a href="{{ url_for('khach.tai_khoan') }}"
+           class="text-decoration-none text-muted">
+            ← Quay lại tài khoản
+        </a>
+
+        <p class="hero-subtitle text-dark mt-3">
+            MEMBERSHIP
+        </p>
+
+        <h2 class="section-title">
+            Hạng thành viên VIP
+        </h2>
+    </div>
+
 </div>
 
-<div class="row g-4 justify-content-center">
+<div class="row g-4">
 
-  <!-- HẠNG HIỆN TẠI -->
-  <div class="col-md-5">
-    <div class="card shadow-sm text-center">
-      <div class="card-body py-5">
-        {% if vip %}
-        <i class="bi bi-award-fill display-3 text-warning"></i>
-        <h4 class="fw-bold mt-3">{{ vip.TenHang }}</h4>
-        <p class="text-muted mb-1">Xin chào, <strong>{{ kh.HoTen }}</strong></p>
+    <!-- THẺ VIP -->
 
-        <div class="d-flex justify-content-center gap-4 mt-3">
-          <div>
-            <p class="display-6 fw-bold text-dark mb-0">{{ "{:,.0f}".format(vip.DiemTichLuy or 0) }}</p>
-            <small class="text-muted">Điểm tích lũy</small>
-          </div>
-          <div>
-            <p class="display-6 fw-bold text-dark mb-0">{{ "{:,.0f}".format(vip.TongChiTieu or 0) }}</p>
-            <small class="text-muted">Tổng chi tiêu (₫)</small>
-          </div>
+    <div class="col-lg-5">
+
+        <div class="product-card overflow-hidden">
+
+            <div style="
+                background:linear-gradient(135deg,#19110b,#8a6a3f);
+                color:white;
+                padding:40px;
+                min-height:340px;
+            ">
+
+                {% if vip %}
+
+                <div class="d-flex justify-content-between align-items-start">
+
+                    <div>
+
+                        <div style="letter-spacing:3px;font-size:12px;">
+                            LUXURY MEMBER
+                        </div>
+
+                        <h2 class="mt-3">
+                            {{ vip.TenHang }}
+                        </h2>
+
+                    </div>
+
+                    <i class="bi bi-award-fill"
+                       style="font-size:50px;"></i>
+
+                </div>
+
+                <div class="mt-5">
+
+                    <div class="mb-3">
+                        Xin chào,
+                        <strong>{{ kh.HoTen }}</strong>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-6">
+
+                            <div style="font-size:30px;font-weight:700;">
+                                {{ "{:,.0f}".format(vip.DiemTichLuy or 0) }}
+                            </div>
+
+                            <small>
+                                Điểm tích lũy
+                            </small>
+
+                        </div>
+
+                        <div class="col-6">
+
+                            <div style="font-size:30px;font-weight:700;">
+                                {{ "{:,.0f}".format(vip.TongChiTieu or 0) }}
+                            </div>
+
+                            <small>
+                                Chi tiêu
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% else %}
+
+                <div class="text-center py-5">
+
+                    <i class="bi bi-award"
+                       style="font-size:70px;"></i>
+
+                    <h3 class="mt-4">
+                        Chưa có hạng VIP
+                    </h3>
+
+                    <p>
+                        Hãy mua sắm để tích lũy điểm.
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
         </div>
 
-        {% if vip.NgayCapNhat %}
-        <p class="text-muted small mt-3 mb-0">
-          Cập nhật: {{ vip.NgayCapNhat.strftime('%d/%m/%Y') }}
-        </p>
-        {% endif %}
-
-        {% else %}
-        <i class="bi bi-award display-3 text-muted"></i>
-        <h5 class="mt-3 text-muted">Bạn chưa có hạng VIP</h5>
-        <p class="text-muted small">Mua sắm để tích điểm và nâng hạng thành viên!</p>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-
-  <!-- QUYỀN LỢI CÁC HẠNG -->
-  <div class="col-md-7">
-    <div class="card shadow-sm">
-      <div class="card-header fw-semibold">Quyền lợi theo hạng</div>
-      <div class="card-body p-0">
-        <table class="table mb-0 small text-center align-middle">
-          <thead class="table-light">
-            <tr>
-              <th class="text-start">Hạng</th>
-              <th>Chi tiêu tối thiểu</th>
-              <th>Giảm giá</th>
-              <th>Ưu tiên hỗ trợ</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="{{ 'table-warning fw-semibold' if vip and vip.TenHang == 'Đồng' else '' }}">
-              <td class="text-start">🥉 Đồng</td>
-              <td>0 ₫</td>
-              <td>0%</td>
-              <td>—</td>
-            </tr>
-            <tr class="{{ 'table-warning fw-semibold' if vip and vip.TenHang == 'Bạc' else '' }}">
-              <td class="text-start">🥈 Bạc</td>
-              <td>5,000,000 ₫</td>
-              <td>3%</td>
-              <td>Email</td>
-            </tr>
-            <tr class="{{ 'table-warning fw-semibold' if vip and vip.TenHang == 'Vàng' else '' }}">
-              <td class="text-start">🥇 Vàng</td>
-              <td>20,000,000 ₫</td>
-              <td>5%</td>
-              <td>Hotline</td>
-            </tr>
-            <tr class="{{ 'table-warning fw-semibold' if vip and vip.TenHang == 'Kim Cương' else '' }}">
-              <td class="text-start">💎 Kim Cương</td>
-              <td>50,000,000 ₫</td>
-              <td>10%</td>
-              <td>Chuyên biệt 24/7</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
 
-    <div class="alert alert-info mt-3 small mb-0">
-      <i class="bi bi-info-circle"></i>
-      Điểm tích lũy và hạng thành viên được cập nhật sau mỗi đơn hàng hoàn thành.
+    <!-- QUYỀN LỢI -->
+
+    <div class="col-lg-7">
+
+        <div class="row g-4">
+
+            <!-- ĐỒNG -->
+
+            <div class="col-md-6">
+
+                <div class="product-card h-100">
+
+                    <div class="product-info">
+
+                        <h4>🥉 Đồng</h4>
+
+                        <p class="text-muted">
+                            Thành viên mới
+                        </p>
+
+                        <hr>
+
+                        <p>Chi tiêu: 0 ₫</p>
+                        <p>Giảm giá: 0%</p>
+                        <p>Hỗ trợ cơ bản</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- BẠC -->
+
+            <div class="col-md-6">
+
+                <div class="product-card h-100">
+
+                    <div class="product-info">
+
+                        <h4>🥈 Bạc</h4>
+
+                        <p class="text-muted">
+                            Khách hàng thân thiết
+                        </p>
+
+                        <hr>
+
+                        <p>Chi tiêu: 5 triệu ₫</p>
+                        <p>Giảm giá: 3%</p>
+                        <p>Hỗ trợ Email</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- VÀNG -->
+
+            <div class="col-md-6">
+
+                <div class="product-card h-100">
+
+                    <div class="product-info">
+
+                        <h4>🥇 Vàng</h4>
+
+                        <p class="text-muted">
+                            Khách hàng cao cấp
+                        </p>
+
+                        <hr>
+
+                        <p>Chi tiêu: 20 triệu ₫</p>
+                        <p>Giảm giá: 5%</p>
+                        <p>Hotline ưu tiên</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- KIM CƯƠNG -->
+
+            <div class="col-md-6">
+
+                <div class="product-card h-100 border border-warning">
+
+                    <div class="product-info">
+
+                        <h4>💎 Kim Cương</h4>
+
+                        <p class="text-muted">
+                            Khách hàng đặc biệt
+                        </p>
+
+                        <hr>
+
+                        <p>Chi tiêu: 50 triệu ₫</p>
+                        <p>Giảm giá: 10%</p>
+                        <p>Hỗ trợ riêng 24/7</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="filter-card mt-4">
+
+            <div class="p-4 text-center">
+
+                <i class="bi bi-info-circle"></i>
+
+                Điểm tích lũy và hạng thành viên được cập nhật
+                tự động sau khi đơn hàng hoàn tất.
+
+            </div>
+
+        </div>
+
     </div>
-  </div>
 
 </div>
+
 {% endblock %}

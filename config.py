@@ -16,12 +16,15 @@ class Config:
     if not PASSWORD:
         raise RuntimeError('DB_PASSWORD environment variable is required. Do NOT commit real credentials.')
     DRIVER   = os.getenv('DB_DRIVER', 'ODBC Driver 17 for SQL Server')
+    ENCRYPT  = os.getenv('DB_ENCRYPT', 'no')
+    TRUST_SERVER_CERTIFICATE = os.getenv('DB_TRUST_SERVER_CERTIFICATE', 'yes')
 
     SQLALCHEMY_DATABASE_URI = (
         f"mssql+pyodbc://{USERNAME}:{quote_plus(PASSWORD)}"
         f"@{SERVER}/{DATABASE}"
         f"?driver={quote_plus(DRIVER)}"
-        "&TrustServerCertificate=yes"
+        f"&Encrypt={quote_plus(ENCRYPT)}"
+        f"&TrustServerCertificate={quote_plus(TRUST_SERVER_CERTIFICATE)}"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

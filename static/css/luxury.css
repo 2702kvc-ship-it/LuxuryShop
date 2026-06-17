@@ -6,6 +6,78 @@ body{
     color:#19110b;
 }
 
+.preference-form{
+    margin:0 12px;
+}
+
+.preference-select{
+    width:auto;
+    min-width:76px;
+    padding:6px 28px 6px 10px;
+    border-radius:0;
+}
+
+.preference-submit{
+    border-radius:0;
+    padding:6px 12px;
+}
+
+body.theme-dark{
+    background:#111827;
+    color:#f9fafb;
+}
+
+body.theme-dark .luxury-navbar,
+body.theme-dark .product-card,
+body.theme-dark .filter-card,
+body.theme-dark .empty-box,
+body.theme-dark .dropdown-menu,
+body.theme-dark .form-control,
+body.theme-dark .form-select{
+    background:#1f2937;
+    color:#f9fafb;
+    border-color:#374151;
+}
+
+body.theme-dark .luxury-logo,
+body.theme-dark .luxury-menu .nav-link,
+body.theme-dark .luxury-user .nav-link,
+body.theme-dark .dropdown-item,
+body.theme-dark .filter-link,
+body.theme-dark .price,
+body.theme-dark .product-name{
+    color:#f9fafb!important;
+}
+
+body.theme-dark .luxury-main{
+    background:#111827;
+}
+
+body.theme-dark .luxury-hero,
+body.theme-dark .product-img-wrap,
+body.theme-dark .product-empty{
+    background:#172033;
+    border-color:#374151;
+    color:#f9fafb;
+}
+
+body.theme-dark .luxury-hero p,
+body.theme-dark .empty-box{
+    color:#d1d5db;
+}
+
+body.theme-dark .btn-luxury,
+body.theme-dark .preference-submit{
+    background:#111827;
+    color:#f9fafb;
+    border-color:#c9a66b;
+}
+
+body.theme-dark .dropdown-item:hover{
+    background:#111827;
+    color:#c9a66b!important;
+}
+
 /* NAVBAR */
 .luxury-navbar{
     background:#fff;
@@ -292,6 +364,11 @@ body{
 
     .collection-header{
         display:block;
+    }
+
+    .preference-form{
+        margin:12px 0;
+        flex-wrap:wrap;
     }
 }
 select.form-control{

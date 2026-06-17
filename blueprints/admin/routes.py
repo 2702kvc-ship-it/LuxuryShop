@@ -4,13 +4,22 @@ from datetime import date, timedelta
 from decimal import Decimal
 from functools import wraps
 
-from flask import Blueprint, current_app, flash, redirect, render_template, url_for, request
+from flask import Blueprint, abort, current_app, flash, redirect, render_template, url_for, request
 from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
 from extensions import db
 from Model.Models import KhachHang, NhanVien, SanPham, DonHang, MaGiamGia, ThuongHieu, DanhMuc, HinhAnhSanPham, BienTheSanPham
 from Model.Datalayer import get_hinh_anh_by_san_pham
+import Service.Logic as logic
 admin_bp = Blueprint('admin', __name__)
+
+ORDER_STATUSES = [
+    ('ChoXacNhan', 'Chờ xác nhận'),
+    ('DaXacNhan', 'Đã xác nhận'),
+    ('DangGiao', 'Đang giao'),
+    ('DaGiao', 'Đã giao'),
+    ('DaHuy', 'Đã hủy'),
+]
 
 
 def staff_required(view_func):
@@ -154,7 +163,38 @@ def discounts():
 @staff_required
 def orders():
     order_list = DonHang.query.order_by(DonHang.DonHangID.desc()).limit(20).all()
-    return render_template('admin/orders.html', staff=current_user, order_list=order_list)
+    return render_template(
+        'admin/orders.html',
+        staff=current_user,
+        order_list=order_list,
+        order_statuses=ORDER_STATUSES,
+    )
+
+
+@admin_bp.route('/don-hang/<int:don_hang_id>/trang-thai', methods=['POST'])
+@staff_required
+def update_order_status(don_hang_id):
+    trang_thai_moi = request.form.get('trang_thai')
+    valid_statuses = {value for value, _ in ORDER_STATUSES}
+
+    if trang_thai_moi not in valid_statuses:
+        flash('Trạng thái đơn hàng không hợp lệ.', 'danger')
+        return redirect(url_for('admin.orders'))
+
+    order = db.session.get(DonHang, don_hang_id)
+    if not order:
+        abort(404)
+    if order.TrangThai == trang_thai_moi:
+        flash('Đơn hàng đang ở trạng thái này.', 'info')
+        return redirect(url_for('admin.orders'))
+
+    _, error = logic.admin_cap_nhat_trang_thai_don_hang(don_hang_id, trang_thai_moi)
+    if error:
+        flash(error, 'danger')
+    else:
+        flash(f'Đã cập nhật đơn {order.MaDonHang} sang {trang_thai_moi}.', 'success')
+
+    return redirect(url_for('admin.orders'))
 
 
 @admin_bp.route('/thuong-hieu')

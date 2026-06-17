@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="{{ luxury_lang }}">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,7 +14,7 @@
   {% block extra_css %}{% endblock %}
 </head>
 
-<body>
+<body class="theme-{{ luxury_theme }}">
 
 <nav class="navbar navbar-expand-lg luxury-navbar">
   <div class="container-fluid px-5">
@@ -46,6 +46,20 @@
       </ul>
 
       <ul class="navbar-nav luxury-user">
+        <li class="nav-item">
+          <form class="preference-form d-flex align-items-center gap-2" method="POST" action="{{ url_for('set_preferences') }}">
+            <input type="hidden" name="next" value="{{ request.full_path }}">
+            <select class="form-select form-select-sm preference-select" name="lang" aria-label="Language">
+              <option value="vi" {% if luxury_lang == 'vi' %}selected{% endif %}>VI</option>
+              <option value="en" {% if luxury_lang == 'en' %}selected{% endif %}>EN</option>
+            </select>
+            <select class="form-select form-select-sm preference-select" name="theme" aria-label="Theme">
+              <option value="light" {% if luxury_theme == 'light' %}selected{% endif %}>Light</option>
+              <option value="dark" {% if luxury_theme == 'dark' %}selected{% endif %}>Dark</option>
+            </select>
+            <button class="btn btn-sm btn-outline-dark preference-submit" type="submit">OK</button>
+          </form>
+        </li>
         {% if current_user.is_authenticated %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">

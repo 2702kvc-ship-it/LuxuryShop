@@ -83,6 +83,17 @@ def chi_tiet_san_pham(san_pham_id):
     bien_thes  = datalayer.get_bien_the_by_san_pham(san_pham_id)
     chung_nhans= datalayer.get_giay_chung_nhan_by_san_pham(san_pham_id)
     danh_gias  = datalayer.get_danh_gia_by_san_pham(san_pham_id)
+    selected_bien_the_id = request.cookies.get(
+        f"luxury_product_{san_pham_id}_variant", type=int
+    )
+    selected_so_luong = request.cookies.get(
+        f"luxury_product_{san_pham_id}_qty", 1, type=int
+    )
+    valid_bien_the_ids = {bt.BienTheID for bt in bien_thes if bt.SoLuongTon > 0}
+    if selected_bien_the_id not in valid_bien_the_ids:
+        selected_bien_the_id = None
+    if not selected_so_luong or selected_so_luong < 1:
+        selected_so_luong = 1
 
     # Kiểm tra khách đã mua sp này chưa (để hiện form đánh giá)
     da_mua      = False
@@ -109,6 +120,8 @@ def chi_tiet_san_pham(san_pham_id):
         danh_gias   = danh_gias,
         da_mua      = da_mua,
         da_danh_gia = da_danh_gia,
+        selected_bien_the_id = selected_bien_the_id,
+        selected_so_luong = selected_so_luong,
     )
 
 
@@ -121,6 +134,10 @@ def chi_tiet_san_pham(san_pham_id):
 def gui_danh_gia(san_pham_id):
     diem_so  = request.form.get("diem_so", type=int)
     nhan_xet = request.form.get("nhan_xet", "").strip() or None
+
+    if diem_so is None:
+        flash("Vui lòng chọn điểm đánh giá.", "danger")
+        return redirect(url_for("khach.chi_tiet_san_pham", san_pham_id=san_pham_id))
 
     dg, loi = logic.gui_danh_gia(
         khach_hang_id = current_user.KhachHangID,
@@ -156,10 +173,29 @@ def xem_gio_hang():
 def them_gio_hang():
     bien_the_id = request.form.get("bien_the_id", type=int)
     so_luong    = request.form.get("so_luong", 1, type=int)
+    san_pham_id = request.form.get("san_pham_id", type=int)
+    redirect_target = request.referrer or url_for("khach.xem_gio_hang")
+
+    if not so_luong or so_luong < 1:
+        so_luong = 1
+
+    bien_the = datalayer.get_bien_the_by_id(bien_the_id) if bien_the_id else None
+    if bien_the:
+        san_pham_id = bien_the.SanPhamID
 
     if not bien_the_id:
         flash("Không xác định được sản phẩm.", "danger")
-        return redirect(request.referrer or url_for("khach.trang_chu"))
+        response = redirect(redirect_target)
+        if san_pham_id:
+            response.set_cookie(
+                f"luxury_product_{san_pham_id}_qty",
+                str(so_luong),
+                max_age=7 * 24 * 60 * 60,
+                httponly=True,
+                secure=request.is_secure,
+                samesite="Lax",
+            )
+        return response
 
     item, loi = logic.them_vao_gio_hang(
         current_user.KhachHangID, bien_the_id, so_luong
@@ -170,7 +206,25 @@ def them_gio_hang():
         flash("Đã thêm vào giỏ hàng.", "success")
 
     # Quay lại trang sản phẩm hoặc trang trước
-    return redirect(request.referrer or url_for("khach.xem_gio_hang"))
+    response = redirect(redirect_target)
+    if san_pham_id:
+        cookie_options = {
+            "max_age": 7 * 24 * 60 * 60,
+            "httponly": True,
+            "secure": request.is_secure,
+            "samesite": "Lax",
+        }
+        response.set_cookie(
+            f"luxury_product_{san_pham_id}_variant",
+            str(bien_the_id),
+            **cookie_options,
+        )
+        response.set_cookie(
+            f"luxury_product_{san_pham_id}_qty",
+            str(so_luong),
+            **cookie_options,
+        )
+    return response
 
 
 @khach_bp.route("/gio-hang/cap-nhat", methods=["POST"])

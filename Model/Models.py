@@ -1,21 +1,20 @@
-
+﻿
 from extensions import db
 from datetime import datetime
 
 
-# ─────────────────────────────────────────
-# 1. THƯƠNG HIỆU
-# ─────────────────────────────────────────
+# 1. Thương Hiệu
+
 class ThuongHieu(db.Model):
     __tablename__ = 'ThuongHieu'
     __table_args__ = {'extend_existing': True}
 
     ThuongHieuID   = db.Column(db.Integer, primary_key=True)
-    TenThuongHieu  = db.Column(db.String(100), nullable=False, unique=True)
-    QuocGiaXuatXu  = db.Column(db.String(100), nullable=False)
+    TenThuongHieu  = db.Column(db.Unicode(100), nullable=False, unique=True)
+    QuocGiaXuatXu  = db.Column(db.Unicode(100), nullable=False)
     NamThanhLap    = db.Column(db.Integer)
-    MoTa           = db.Column(db.String(500))
-    Logo           = db.Column(db.String(255))
+    MoTa           = db.Column(db.Unicode(500))
+    Logo           = db.Column(db.Unicode(255))
     TrangThai      = db.Column(db.Boolean, default=True)
 
     # Relationships
@@ -25,18 +24,16 @@ class ThuongHieu(db.Model):
     def __repr__(self):
         return f'<ThuongHieu {self.TenThuongHieu}>'
 
-
-# ─────────────────────────────────────────
 # 2. DANH MỤC (tự tham chiếu - danh mục cha/con)
-# ─────────────────────────────────────────
+
 class DanhMuc(db.Model):
     __tablename__ = 'DanhMuc'
     __table_args__ = {'extend_existing': True}
 
     DanhMucID    = db.Column(db.Integer, primary_key=True)
-    TenDanhMuc   = db.Column(db.String(100), nullable=False, unique=True)
+    TenDanhMuc   = db.Column(db.Unicode(100), nullable=False, unique=True)
     DanhMucChaID = db.Column(db.Integer, db.ForeignKey('DanhMuc.DanhMucID'), nullable=True)
-    MoTa         = db.Column(db.String(300))
+    MoTa         = db.Column(db.Unicode(300))
     TrangThai    = db.Column(db.Boolean, default=True)
 
     # Self-referential relationship
@@ -47,24 +44,23 @@ class DanhMuc(db.Model):
         return f'<DanhMuc {self.TenDanhMuc}>'
 
 
-# ─────────────────────────────────────────
-# 3. SẢN PHẨM
-# ─────────────────────────────────────────
+# 3. Sản Phẩm
+
 class SanPham(db.Model):
     __tablename__ = 'SanPham'
     __table_args__ = {'extend_existing': True}
 
     SanPhamID    = db.Column(db.Integer, primary_key=True)
-    TenSanPham   = db.Column(db.String(200), nullable=False)
-    MaSanPham    = db.Column(db.String(50), nullable=False, unique=True)
+    TenSanPham   = db.Column(db.Unicode(200), nullable=False)
+    MaSanPham    = db.Column(db.Unicode(50), nullable=False, unique=True)
     ThuongHieuID = db.Column(db.Integer, db.ForeignKey('ThuongHieu.ThuongHieuID'), nullable=False)
     DanhMucID    = db.Column(db.Integer, db.ForeignKey('DanhMuc.DanhMucID'), nullable=False)
     GiaBan       = db.Column(db.Numeric(18, 2), nullable=False)
     GiaGoc       = db.Column(db.Numeric(18, 2), nullable=False)
-    ChatLieu     = db.Column(db.String(200))
-    XuatXu       = db.Column(db.String(100), nullable=False)
-    MoTa         = db.Column(db.Text)
-    TrangThai    = db.Column(db.String(20), default='DangBan')
+    ChatLieu     = db.Column(db.Unicode(200))
+    XuatXu       = db.Column(db.Unicode(100), nullable=False)
+    MoTa         = db.Column(db.UnicodeText)
+    TrangThai    = db.Column(db.Unicode(20), default='DangBan')
 
     # Relationships
     bien_thes       = db.relationship('BienTheSanPham', backref='san_pham', lazy=True)
@@ -74,7 +70,7 @@ class SanPham(db.Model):
 
     @property
     def anh_chinh(self):
-        """Trả về ảnh chính của sản phẩm, dùng trong template."""
+        """Tráº£ vá» áº£nh chÃ­nh cá»§a sáº£n pháº©m, dÃ¹ng trong template."""
         anh = HinhAnhSanPham.query.filter_by(SanPhamID=self.SanPhamID, LaAnhChinh=True).first()
         return anh.DuongDan if anh else 'default.jpg'
 
@@ -82,41 +78,37 @@ class SanPham(db.Model):
         return f'<SanPham {self.TenSanPham}>'
 
 
-# ─────────────────────────────────────────
-# 4. GIẤY CHỨNG NHẬN
-# ─────────────────────────────────────────
+# 4. Giấy Chứng Nhận
 class GiayChungNhan(db.Model):
     __tablename__ = 'GiayChungNhan'
     __table_args__ = {'extend_existing': True}
 
     GiayChungNhanID = db.Column(db.Integer, primary_key=True)
     SanPhamID       = db.Column(db.Integer, db.ForeignKey('SanPham.SanPhamID'), nullable=False)
-    MaChungNhan     = db.Column(db.String(100), nullable=False, unique=True)
-    ToChucCap       = db.Column(db.String(200), nullable=False)
+    MaChungNhan     = db.Column(db.Unicode(100), nullable=False, unique=True)
+    ToChucCap       = db.Column(db.Unicode(200), nullable=False)
     NgayCap         = db.Column(db.Date, nullable=False)
     NgayHetHan      = db.Column(db.Date, nullable=True)
-    QRCode          = db.Column(db.String(500))
+    QRCode          = db.Column(db.Unicode(500))
 
     def __repr__(self):
         return f'<GiayChungNhan {self.MaChungNhan}>'
 
 
-# ─────────────────────────────────────────
-# 5. BIẾN THỂ SẢN PHẨM (màu sắc, kích thước, tồn kho)
-# ─────────────────────────────────────────
+# 5. Biến thể sản phẩm (mỗi biến thể là một phiên bản cụ thể của sản phẩm, ví dụ: màu sắc, kích thước) - có thể có giá bán riêng nếu cần thiết
 class BienTheSanPham(db.Model):
     __tablename__ = 'BienTheSanPham'
     __table_args__ = {'extend_existing': True}
 
     BienTheID    = db.Column(db.Integer, primary_key=True)
     SanPhamID    = db.Column(db.Integer, db.ForeignKey('SanPham.SanPhamID'), nullable=False)
-    SerialNumber = db.Column(db.String(100), nullable=False, unique=True)
-    MauSac       = db.Column(db.String(50), nullable=False)
-    KichThuoc    = db.Column(db.String(20))
-    MaVach       = db.Column(db.String(50), nullable=False, unique=True)
+    SerialNumber = db.Column(db.Unicode(100), nullable=False, unique=True)
+    MauSac       = db.Column(db.Unicode(50), nullable=False)
+    KichThuoc    = db.Column(db.Unicode(20))
+    MaVach       = db.Column(db.Unicode(50), nullable=False, unique=True)
     SoLuongTon   = db.Column(db.Integer, nullable=False, default=0)
     GiaBanRieng  = db.Column(db.Numeric(18, 2), nullable=True)
-    HinhAnh      = db.Column(db.String(255))
+    HinhAnh      = db.Column(db.Unicode(255))
 
     # Relationships
     gio_hangs       = db.relationship('GioHang', backref='bien_the', lazy=True)
@@ -124,23 +116,22 @@ class BienTheSanPham(db.Model):
     bao_hanhs       = db.relationship('BaoHanh', backref='bien_the', lazy=True)
 
     def gia_hien_tai(self):
-        """Trả về giá riêng nếu có, không thì dùng giá sản phẩm."""
+        """Tráº£ vá» giÃ¡ riÃªng náº¿u cÃ³, khÃ´ng thÃ¬ dÃ¹ng giÃ¡ sáº£n pháº©m."""
         return self.GiaBanRieng if self.GiaBanRieng else self.san_pham.GiaBan
 
     def __repr__(self):
         return f'<BienThe {self.MauSac} - {self.KichThuoc}>'
 
 
-# ─────────────────────────────────────────
-# 6. HÌNH ẢNH SẢN PHẨM
-# ─────────────────────────────────────────
+# 6. Hình ảnh sản phẩm
+
 class HinhAnhSanPham(db.Model):
     __tablename__ = 'HinhAnhSanPham'
     __table_args__ = {'extend_existing': True}
 
     HinhAnhID  = db.Column(db.Integer, primary_key=True)
     SanPhamID  = db.Column(db.Integer, db.ForeignKey('SanPham.SanPhamID'), nullable=False)
-    DuongDan   = db.Column(db.String(500), nullable=False)
+    DuongDan   = db.Column(db.Unicode(500), nullable=False)
     LaAnhChinh = db.Column(db.Boolean, default=False)
     ThuTu      = db.Column(db.Integer, default=1)
 
@@ -148,20 +139,19 @@ class HinhAnhSanPham(db.Model):
         return f'<HinhAnh {self.DuongDan}>'
 
 
-# ─────────────────────────────────────────
-# 7. KHÁCH HÀNG
-# ─────────────────────────────────────────
+# 7. Khách hàng
+
 class KhachHang(db.Model):
     __tablename__ = 'KhachHang'
     __table_args__ = {'extend_existing': True}
 
     KhachHangID   = db.Column(db.Integer, primary_key=True)
-    HoTen         = db.Column(db.String(100), nullable=False)
-    Email         = db.Column(db.String(150), nullable=False, unique=True)
-    MatKhau       = db.Column(db.String(255), nullable=False)
-    SoDienThoai   = db.Column(db.String(15), unique=True)
+    HoTen         = db.Column(db.Unicode(100), nullable=False)
+    Email         = db.Column(db.Unicode(150), nullable=False, unique=True)
+    MatKhau       = db.Column(db.Unicode(255), nullable=False)
+    SoDienThoai   = db.Column(db.Unicode(15), unique=True)
     NgaySinh      = db.Column(db.Date, nullable=True)
-    HangThanhVien = db.Column(db.String(20), default='Standard')
+    HangThanhVien = db.Column(db.Unicode(20), default='Standard')
     DiemTichLuy   = db.Column(db.Integer, default=0)
     TongChiTieu   = db.Column(db.Numeric(18, 2), default=0)
     NgayDangKy    = db.Column(db.DateTime, default=datetime.now)
@@ -192,16 +182,14 @@ class KhachHang(db.Model):
         return f'<KhachHang {self.Email}>'
 
 
-# ─────────────────────────────────────────
 # 8. CHƯƠNG TRÌNH VIP
-# ─────────────────────────────────────────
 class ChuongTrinhVIP(db.Model):
     __tablename__ = 'ChuongTrinhVIP'
     __table_args__ = {'extend_existing': True}
 
     VIPProgramID  = db.Column(db.Integer, primary_key=True)
     KhachHangID   = db.Column(db.Integer, db.ForeignKey('KhachHang.KhachHangID'), nullable=False, unique=True)
-    HangVIP       = db.Column(db.String(20), nullable=False)
+    HangVIP       = db.Column(db.Unicode(20), nullable=False)
     DiemHienTai   = db.Column(db.Integer, default=0)
     NgayLenHang   = db.Column(db.Date, nullable=False)
     NgayHetHan    = db.Column(db.Date, nullable=True)
@@ -211,17 +199,16 @@ class ChuongTrinhVIP(db.Model):
         return f'<VIP {self.HangVIP} - KH {self.KhachHangID}>'
 
 
-# ─────────────────────────────────────────
-# 9. MÃ GIẢM GIÁ
-# ─────────────────────────────────────────
+# 9. Mã giảm giá
+
 class MaGiamGia(db.Model):
     __tablename__ = 'MaGiamGia'
     __table_args__ = {'extend_existing': True}
 
     MaGiamGiaID     = db.Column(db.Integer, primary_key=True)
-    MaCode          = db.Column(db.String(50), nullable=False, unique=True)
+    MaCode          = db.Column(db.Unicode(50), nullable=False, unique=True)
     ThuongHieuID    = db.Column(db.Integer, db.ForeignKey('ThuongHieu.ThuongHieuID'), nullable=True)
-    LoaiGiam        = db.Column(db.String(30), nullable=False)   # 'PhanTram' | 'SoTienCoDinh'
+    LoaiGiam        = db.Column(db.Unicode(30), nullable=False)   # 'PhanTram' | 'SoTienCoDinh'
     GiaTri          = db.Column(db.Numeric(10, 2), nullable=False)
     GiamToiDa       = db.Column(db.Numeric(18, 2), nullable=True)
     DonHangToiThieu = db.Column(db.Numeric(18, 2), default=0)
@@ -247,24 +234,22 @@ class MaGiamGia(db.Model):
         return f'<MaGiamGia {self.MaCode}>'
 
 
-# ─────────────────────────────────────────
 # 10. ĐƠN HÀNG
-# ─────────────────────────────────────────
 class DonHang(db.Model):
     __tablename__ = 'DonHang'
     __table_args__ = {'extend_existing': True}
 
     DonHangID    = db.Column(db.Integer, primary_key=True)
-    MaDonHang    = db.Column(db.String(20), nullable=False, unique=True)
+    MaDonHang    = db.Column(db.Unicode(20), nullable=False, unique=True)
     KhachHangID  = db.Column(db.Integer, db.ForeignKey('KhachHang.KhachHangID'), nullable=False)
     MaGiamGiaID  = db.Column(db.Integer, db.ForeignKey('MaGiamGia.MaGiamGiaID'), nullable=True)
-    TrangThai    = db.Column(db.String(30), default='ChoXacNhan')
+    TrangThai    = db.Column(db.Unicode(30), default='ChoXacNhan')
     TongTienHang = db.Column(db.Numeric(18, 2), nullable=False)
     GiamGia      = db.Column(db.Numeric(18, 2), default=0)
     ThanhToan    = db.Column(db.Numeric(18, 2), nullable=False)
-    DiaChiGiao   = db.Column(db.String(300), nullable=False)
+    DiaChiGiao   = db.Column(db.Unicode(300), nullable=False)
     NgayDat      = db.Column(db.DateTime, default=datetime.now)
-    GhiChu       = db.Column(db.String(500))
+    GhiChu       = db.Column(db.Unicode(500))
 
     # Relationships
     chi_tiets  = db.relationship('ChiTietDonHang', backref='don_hang', lazy=True)
@@ -275,9 +260,7 @@ class DonHang(db.Model):
         return f'<DonHang {self.MaDonHang}>'
 
 
-# ─────────────────────────────────────────
 # 11. CHI TIẾT ĐƠN HÀNG
-# ─────────────────────────────────────────
 class ChiTietDonHang(db.Model):
     __tablename__ = 'ChiTietDonHang'
     __table_args__ = {'extend_existing': True}
@@ -294,9 +277,7 @@ class ChiTietDonHang(db.Model):
         return f'<ChiTiet DH={self.DonHangID} BT={self.BienTheID}>'
 
 
-# ─────────────────────────────────────────
 # 12. BẢO HÀNH
-# ─────────────────────────────────────────
 class BaoHanh(db.Model):
     __tablename__ = 'BaoHanh'
     __table_args__ = {'extend_existing': True}
@@ -307,35 +288,31 @@ class BaoHanh(db.Model):
     DonHangID          = db.Column(db.Integer, db.ForeignKey('DonHang.DonHangID'), nullable=False)
     NgayBatDau         = db.Column(db.Date, nullable=False)
     NgayKetThuc        = db.Column(db.Date, nullable=False)
-    DieuKienBaoHanh    = db.Column(db.String(500))
-    TrangThaiBaoHanh   = db.Column(db.String(20), default='ConHan')
+    DieuKienBaoHanh    = db.Column(db.Unicode(500))
+    TrangThaiBaoHanh   = db.Column(db.Unicode(20), default='ConHan')
 
     def __repr__(self):
         return f'<BaoHanh {self.BaoHanhID} - {self.TrangThaiBaoHanh}>'
 
 
-# ─────────────────────────────────────────
 # 13. THANH TOÁN
-# ─────────────────────────────────────────
 class ThanhToan(db.Model):
     __tablename__ = 'ThanhToan'
     __table_args__ = {'extend_existing': True}
 
     ThanhToanID  = db.Column(db.Integer, primary_key=True)
     DonHangID    = db.Column(db.Integer, db.ForeignKey('DonHang.DonHangID'), nullable=False)
-    PhuongThuc   = db.Column(db.String(30), nullable=False)
+    PhuongThuc   = db.Column(db.Unicode(30), nullable=False)
     SoTien       = db.Column(db.Numeric(18, 2), nullable=False)
-    MaGiaoDich   = db.Column(db.String(100), unique=True)
-    TrangThai    = db.Column(db.String(20), default='ChoPhanHoi')
+    MaGiaoDich   = db.Column(db.Unicode(100), unique=True)
+    TrangThai    = db.Column(db.Unicode(20), default='ChoPhanHoi')
     ThoiGian     = db.Column(db.DateTime, default=datetime.now)
 
     def __repr__(self):
         return f'<ThanhToan {self.PhuongThuc} - {self.TrangThai}>'
 
 
-# ─────────────────────────────────────────
 # 14. ĐÁNH GIÁ
-# ─────────────────────────────────────────
 class DanhGia(db.Model):
     __tablename__ = 'DanhGia'
     __table_args__ = {'extend_existing': True}
@@ -345,7 +322,7 @@ class DanhGia(db.Model):
     KhachHangID = db.Column(db.Integer, db.ForeignKey('KhachHang.KhachHangID'), nullable=False)
     MaGiamGiaID = db.Column(db.Integer, db.ForeignKey('MaGiamGia.MaGiamGiaID'), nullable=True)
     DiemSo      = db.Column(db.SmallInteger, nullable=False)
-    NhanXet     = db.Column(db.Text)
+    NhanXet     = db.Column(db.UnicodeText)
     DaXacNhan   = db.Column(db.Boolean, default=False)
     NgayDanhGia = db.Column(db.DateTime, default=datetime.now)
 
@@ -353,9 +330,7 @@ class DanhGia(db.Model):
         return f'<DanhGia SP={self.SanPhamID} KH={self.KhachHangID} Diem={self.DiemSo}>'
 
 
-# ─────────────────────────────────────────
 # 15. GIỎ HÀNG
-# ─────────────────────────────────────────
 class GioHang(db.Model):
     __tablename__ = 'GioHang'
     __table_args__ = {'extend_existing': True}
@@ -374,19 +349,17 @@ class GioHang(db.Model):
         return f'<GioHang KH={self.KhachHangID} BT={self.BienTheID} SL={self.SoLuong}>'
 
 
-# ─────────────────────────────────────────
 # 16. NHÂN VIÊN
-# ─────────────────────────────────────────
 class NhanVien(db.Model):
     __tablename__ = 'NhanVien'
     __table_args__ = {'extend_existing': True}
 
     NhanVienID  = db.Column(db.Integer, primary_key=True)
-    HoTen       = db.Column(db.String(100), nullable=False)
-    Email       = db.Column(db.String(100), nullable=False, unique=True)
-    MatKhau     = db.Column(db.String(255), nullable=False)
-    SoDienThoai = db.Column(db.String(15), unique=True)
-    VaiTro      = db.Column(db.String(30), default='NhanVienBanHang')
+    HoTen       = db.Column(db.Unicode(100), nullable=False)
+    Email       = db.Column(db.Unicode(100), nullable=False, unique=True)
+    MatKhau     = db.Column(db.Unicode(255), nullable=False)
+    SoDienThoai = db.Column(db.Unicode(15), unique=True)
+    VaiTro      = db.Column(db.Unicode(30), default='NhanVienBanHang')
     TrangThai   = db.Column(db.Boolean, default=True)
     NgayTao     = db.Column(db.DateTime, default=datetime.now)
     NgayCapNhat = db.Column(db.DateTime, default=datetime.now)

@@ -69,6 +69,7 @@
 
         <form method="POST"
               action="{{ url_for('khach.them_gio_hang') }}">
+            <input type="hidden" name="san_pham_id" value="{{ sp.SanPhamID }}">
 
             <div class="mb-3">
 
@@ -86,6 +87,7 @@
 
                     {% for bt in bien_thes %}
                     <option value="{{ bt.BienTheID }}"
+                            {% if selected_bien_the_id == bt.BienTheID %}selected{% endif %}
                             {% if bt.SoLuongTon <= 0 %}disabled{% endif %}>
 
                         {{ bt.MauSac }}
@@ -115,7 +117,7 @@
 
                 <input type="number"
                        name="so_luong"
-                       value="1"
+                       value="{{ selected_so_luong }}"
                        min="1"
                        class="form-control"
                        style="width:120px;">
@@ -183,6 +185,68 @@
         </div>
 
     </div>
+
+    {% if current_user.is_authenticated %}
+        {% if da_mua and not da_danh_gia %}
+        <div class="filter-card mb-4">
+            <div class="p-4">
+                <h5 class="fw-semibold mb-3">
+                    Viết đánh giá của bạn
+                </h5>
+
+                <form method="POST"
+                      action="{{ url_for('khach.gui_danh_gia', san_pham_id=sp.SanPhamID) }}">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Điểm đánh giá
+                        </label>
+                        <select name="diem_so"
+                                class="form-select"
+                                required>
+                            <option value="5">5 sao - Rất hài lòng</option>
+                            <option value="4">4 sao - Hài lòng</option>
+                            <option value="3">3 sao - Bình thường</option>
+                            <option value="2">2 sao - Chưa hài lòng</option>
+                            <option value="1">1 sao - Không hài lòng</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Nhận xét
+                        </label>
+                        <textarea name="nhan_xet"
+                                  class="form-control"
+                                  rows="4"
+                                  maxlength="1000"
+                                  placeholder="Chia sẻ cảm nhận của bạn về sản phẩm..."></textarea>
+                    </div>
+
+                    <button type="submit"
+                            class="btn-luxury"
+                            style="max-width:220px;">
+                        GỬI ĐÁNH GIÁ
+                    </button>
+
+                </form>
+            </div>
+        </div>
+        {% elif da_danh_gia %}
+        <div class="alert alert-info mb-4">
+            Bạn đã đánh giá sản phẩm này.
+        </div>
+        {% else %}
+        <div class="alert alert-light border mb-4">
+            Bạn chỉ có thể đánh giá sau khi đơn hàng chứa sản phẩm này đã được giao thành công.
+        </div>
+        {% endif %}
+    {% else %}
+    <div class="alert alert-light border mb-4">
+        <a href="{{ url_for('auth.login') }}" class="text-dark fw-semibold">Đăng nhập</a>
+        để đánh giá sản phẩm này.
+    </div>
+    {% endif %}
 
     {% if danh_gias %}
 

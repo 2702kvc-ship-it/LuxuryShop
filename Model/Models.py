@@ -116,7 +116,7 @@ class BienTheSanPham(db.Model):
     bao_hanhs       = db.relationship('BaoHanh', backref='bien_the', lazy=True)
 
     def gia_hien_tai(self):
-        """Tráº£ vá» giÃ¡ riÃªng náº¿u cÃ³, khÃ´ng thÃ¬ dÃ¹ng giÃ¡ sáº£n pháº©m."""
+        """Trả về giá riêng nếu có, không thì dùng giá sản phẩm."""
         return self.GiaBanRieng if self.GiaBanRieng else self.san_pham.GiaBan
 
     def __repr__(self):

@@ -1,5 +1,5 @@
 {% extends 'admin/base.html' %}
-{% block title %}Tổng quan — LuxuryShop{% endblock %}
+{% block title %}Tổng quan - LuxuryShop{% endblock %}
 
 {% block content %}
 <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
@@ -47,8 +47,56 @@
 
 <div class="card card-soft">
   <div class="card-body p-4">
-    <h5 class="fw-semibold mb-2">Bắt đầu quản trị</h5>
-    <p class="text-muted mb-0">Từ sidebar bên trái, bạn có thể đi đến quản lý người dùng, sản phẩm, mã giảm giá và đơn hàng. Đây là khung nền ban đầu để mình sẽ gắn CRUD thật vào sau.</p>
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+      <div>
+        <h5 class="fw-semibold mb-1">Top 10 khách hàng chi tiêu nhiều nhất</h5>
+        <p class="text-muted mb-0">Lọc theo ngày đặt đơn, không tính đơn đã hủy.</p>
+      </div>
+      <form class="row g-2 align-items-end" method="GET" action="{{ url_for('admin.dashboard') }}">
+        <div class="col-auto">
+          <label class="form-label small text-muted mb-1" for="tu_ngay">Từ ngày</label>
+          <input class="form-control" id="tu_ngay" name="tu_ngay" type="date" value="{{ start_date.isoformat() }}">
+        </div>
+        <div class="col-auto">
+          <label class="form-label small text-muted mb-1" for="den_ngay">Đến ngày</label>
+          <input class="form-control" id="den_ngay" name="den_ngay" type="date" value="{{ end_date.isoformat() }}">
+        </div>
+        <div class="col-auto">
+          <button class="btn btn-dark" type="submit">Lọc</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr>
+            <th style="width: 72px;">Hạng</th>
+            <th>Khách hàng</th>
+            <th>Email</th>
+            <th>Số điện thoại</th>
+            <th class="text-end">Số đơn</th>
+            <th class="text-end">Tổng chi tiêu</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in top_spenders %}
+          <tr>
+            <td class="fw-semibold">#{{ loop.index }}</td>
+            <td>{{ item.HoTen }}</td>
+            <td>{{ item.Email }}</td>
+            <td>{{ item.SoDienThoai or '-' }}</td>
+            <td class="text-end">{{ item.order_count }}</td>
+            <td class="text-end fw-semibold">{{ "{:,.0f}".format(item.total_spent or 0) }} đ</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="6" class="text-muted">Không có khách hàng phát sinh chi tiêu trong khoảng thời gian này.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 {% endblock %}

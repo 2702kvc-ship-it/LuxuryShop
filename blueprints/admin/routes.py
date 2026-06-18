@@ -1,6 +1,6 @@
 import os
 import uuid
-from datetime import date, timedelta
+from datetime import date, datetime, time, timedelta
 from decimal import Decimal
 from functools import wraps
 
@@ -122,6 +122,43 @@ def _delete_variant_image_file(image_path):
 @admin_bp.route('/')
 @staff_required
 def dashboard():
+    default_end_date = date.today()
+    default_start_date = default_end_date - timedelta(days=7)
+    start_date = _parse_date(request.args.get('tu_ngay'), default_start_date)
+    end_date = _parse_date(request.args.get('den_ngay'), default_end_date)
+
+    if start_date > end_date:
+        start_date, end_date = end_date, start_date
+
+    start_datetime = datetime.combine(start_date, time.min)
+    end_datetime = datetime.combine(end_date + timedelta(days=1), time.min)
+
+    top_spenders = (
+        db.session.query(
+            KhachHang.KhachHangID,
+            KhachHang.HoTen,
+            KhachHang.Email,
+            KhachHang.SoDienThoai,
+            db.func.coalesce(db.func.sum(DonHang.ThanhToan), 0).label('total_spent'),
+            db.func.count(DonHang.DonHangID).label('order_count'),
+        )
+        .join(DonHang, DonHang.KhachHangID == KhachHang.KhachHangID)
+        .filter(
+            DonHang.NgayDat >= start_datetime,
+            DonHang.NgayDat < end_datetime,
+            DonHang.TrangThai != 'DaHuy',
+        )
+        .group_by(
+            KhachHang.KhachHangID,
+            KhachHang.HoTen,
+            KhachHang.Email,
+            KhachHang.SoDienThoai,
+        )
+        .order_by(db.desc('total_spent'))
+        .limit(10)
+        .all()
+    )
+
     stats = {
         'customers': KhachHang.query.count(),
         'staff': NhanVien.query.count(),
@@ -129,7 +166,14 @@ def dashboard():
         'orders': DonHang.query.count(),
         'discounts': MaGiamGia.query.count(),
     }
-    return render_template('admin/dashboard.html', staff=current_user, stats=stats)
+    return render_template(
+        'admin/dashboard.html',
+        staff=current_user,
+        stats=stats,
+        top_spenders=top_spenders,
+        start_date=start_date,
+        end_date=end_date,
+    )
 
 
 @admin_bp.route('/nguoi-dung')
